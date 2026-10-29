@@ -141,7 +141,7 @@
                         Las mejores promociones <span class="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">en un solo lugar</span>
                     </h1>
                     <p class="text-slate-400 text-sm sm:text-base mb-6">
-                        Recopilamos, verificamos y ordenamos de mayor a menor descuento las ofertas reales de Mercado Libre, Amazon y AliExpress para que no pagues de más.
+                        Recopilamos, verificamos y ordenamos de mayor a descuento las ofertas reales de Mercado Libre, Amazon y AliExpress para que no pagues de más.
                     </p>
                     <div class="flex flex-wrap gap-4 text-xs text-slate-300">
                         <span class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/50">
@@ -454,7 +454,7 @@
     <!-- LOGICA JAVASCRIPT INTEGRADA -->
     <script>
         // DATOS MOCK INICIALES DE OFERTAS
-        const sampleDeals = [
+        let sampleDeals = [
             {
                 id: 1,
                 title: "Smartphone Samsung Galaxy S23 256GB Ultra HD",
@@ -465,7 +465,7 @@
                 score: 9.8,
                 expiryHours: 12,
                 image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com",
+                url: "https://mercadolibre.com.ar",
                 keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"]
             },
             {
@@ -480,207 +480,56 @@
                 image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
                 url: "https://amazon.com",
                 keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"]
-            },
-            {
-                id: 3,
-                title: "Consola Nintendo Switch OLED Edition 64GB",
-                store: "aliexpress",
-                price: 270,
-                originalPrice: 350,
-                discount: 22,
-                score: 9.2,
-                expiryHours: 24,
-                image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=500&q=80",
-                url: "https://aliexpress.com",
-                keywords: ["consola", "nintendo", "switch", "juegos", "gamer"]
-            },
-            {
-                id: 4,
-                title: "Apple MacBook Air M2 8GB RAM 256GB SSD",
-                store: "amazon",
-                price: 999,
-                originalPrice: 1199,
-                discount: 17,
-                score: 9.7,
-                expiryHours: 5,
-                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80",
-                url: "https://amazon.com",
-                keywords: ["laptop", "macbook", "apple", "notebook", "ordenador"]
-            },
-            {
-                id: 5,
-                title: "Smart Watch Xiaomi Watch S1 Active GPS",
-                store: "aliexpress",
-                price: 85,
-                originalPrice: 140,
-                discount: 39,
-                score: 8.9,
-                expiryHours: 48,
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80",
-                url: "https://aliexpress.com",
-                keywords: ["smartwatch", "reloj", "xiaomi", "deporte", "fitness"]
-            },
-            {
-                id: 6,
-                title: "Teclado Mecánico Wireless Keychron K2 RGB",
-                store: "mercadolibre",
-                price: 79,
-                originalPrice: 110,
-                discount: 28,
-                score: 9.1,
-                expiryHours: 18,
-                image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com",
-                keywords: ["teclado", "keychron", "mecanico", "gamer", "pc"]
             }
         ];
 
-        // CONFIGURACIÓN GLOBAL / LOCALSTORAGE
-        let dealsList = JSON.parse(localStorage.getItem('promo_deals')) || sampleDeals;
-        let favoriteIds = JSON.parse(localStorage.getItem('promo_favs')) || [1, 2];
-        let recentSearches = JSON.parse(localStorage.getItem('promo_searches')) || ["Notebook Gamer", "Auriculares Inalámbricos", "Samsung S23"];
-        let adminConfig = JSON.parse(localStorage.getItem('promo_admin_cfg')) || {
-            supabaseUrl: '',
+        let favorites = JSON.parse(localStorage.getItem('promocentral_favs')) || [];
+        let currentFilter = 'all';
+        let recentSearches = JSON.parse(localStorage.getItem('promocentral_recent')) || ['Notebook', 'Smart TV'];
+
+        // Configuración guardada o por defecto
+        let appConfig = JSON.parse(localStorage.getItem('promocentral_config')) || {
+            supabaseUrl: 'https://pzyqhjelwuilcgzgxjbm.supabase.co',
             supabaseKey: '',
-            tagML: 'promocentral-20',
-            tagAMZ: 'promocentral-21',
-            tagALI: 'promocentral_ali'
+            tagMl: 'hg20261026145647177',
+            tagAmz: '',
+            tagAli: ''
         };
 
-        let currentFilterStore = 'all';
-        let trafficChartInstance = null;
-        let pieChartInstance = null;
-
-        // INICIALIZACIÓN
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             renderFeaturedDeals();
+            updateFavBadge();
             renderFavorites();
             renderRecentSearches();
-            updateFavBadge();
-            loadAdminConfigFields();
+            loadConfigToForm();
         });
 
-        // CAMBIO DE PESTAÑAS
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
-            // Botones escritorio
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            // Actualizar botones navegación escritorio
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-slate-400 hover:text-white flex items-center gap-2";
             });
+            const activeDesktopBtn = document.getElementById(`nav-${tabId}`);
+            if (activeDesktopBtn) {
+                activeDesktopBtn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md";
+            }
 
-            // Botones móvil
+            // Actualizar botones navegación móvil
             document.querySelectorAll('.nav-mobile-btn').forEach(btn => {
-                btn.classList.remove('text-purple-400');
-                btn.classList.add('text-slate-400');
+                btn.className = "nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium";
             });
-
-            const activeContent = document.getElementById(`tab-${tabId}`);
-            if (activeContent) activeContent.classList.remove('hidden');
-
-            const activeBtn = document.getElementById(`nav-${tabId}`);
-            if (activeBtn) {
-                activeBtn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md";
-            }
-
             const activeMobileBtn = document.getElementById(`nav-mobile-${tabId}`);
-            if(activeMobileBtn) {
-                activeMobileBtn.classList.remove('text-slate-400');
-                activeMobileBtn.classList.add('text-purple-400');
+            if (activeMobileBtn) {
+                activeMobileBtn.className = "nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-purple-400 text-xs font-medium";
             }
-
-            if (tabId === 'admin') {
-                setTimeout(initAdminCharts, 100);
-            }
-        }
-
-        // GENERADOR DE CARDS
-        function createDealCard(deal, isFavTab = false) {
-            const isFav = favoriteIds.includes(deal.id);
-            
-            let storeBadge = '';
-            let storeTag = '';
-            if(deal.store === 'mercadolibre') {
-                storeBadge = `<span class="badge-ml text-[10px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1"><i class="fa-solid fa-handshake"></i> Mercado Libre</span>`;
-                storeTag = adminConfig.tagML;
-            } else if(deal.store === 'amazon') {
-                storeBadge = `<span class="badge-amz text-[10px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1"><i class="fa-brands fa-amazon"></i> Amazon</span>`;
-                storeTag = adminConfig.tagAMZ;
-            } else {
-                storeBadge = `<span class="badge-ali text-[10px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1"><i class="fa-solid fa-bag-shopping"></i> AliExpress</span>`;
-                storeTag = adminConfig.tagALI;
-            }
-
-            const affiliateLink = deal.url.includes('matt_tool') ? deal.url : `${deal.url}?tag=${storeTag}&ref=promocentral`;
-            const isExpired = deal.expiryHours <= 0;
-            const statusBadge = isFavTab ? (
-                isExpired ? 
-                `<span class="text-[10px] bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-xmark"></i> Oferta Expirada</span>` :
-                `<span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check"></i> Promoción Vigente</span>`
-            ) : '';
-
-            return `
-                <div class="bg-carbon-card border border-slate-800 hover:border-purple-500/50 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 flex flex-col justify-between group glow-purple-hover">
-                    <div class="relative overflow-hidden aspect-video bg-slate-900">
-                        <img src="${deal.image}" alt="${deal.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/0f172a/8b5cf6?text=PromoCentral'">
-                        <div class="absolute top-3 left-3 flex items-center gap-2">
-                            ${storeBadge}
-                        </div>
-                        <button onclick="toggleFavorite(${deal.id})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/80 backdrop-blur-md flex items-center justify-center text-slate-300 hover:text-rose-500 transition-colors">
-                            <i class="${isFav ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
-                        </button>
-                        <div class="absolute bottom-3 left-3 bg-purple-950/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-300 border border-purple-500/30">
-                            ⭐ Puntuación: ${deal.score}/10
-                        </div>
-                    </div>
-
-                    <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
-                        <div>
-                            ${statusBadge ? `<div class="mb-2">${statusBadge}</div>` : ''}
-                            <h3 class="font-bold text-slate-100 text-sm line-clamp-2 leading-snug group-hover:text-purple-300 transition-colors">${deal.title}</h3>
-                        </div>
-
-                        <div class="space-y-3 pt-2 border-t border-slate-800/80">
-                            <div class="flex items-baseline justify-between">
-                                <div>
-                                    <span class="text-2xl font-black text-white">$${deal.price}</span>
-                                    <span class="text-xs text-slate-500 line-through ml-2">$${deal.originalPrice}</span>
-                                </div>
-                                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-extrabold px-2 py-1 rounded-lg">
-                                    -${deal.discount}% OFF
-                                </span>
-                            </div>
-
-                            <a href="${affiliateLink}" target="_blank" onclick="trackClick('${deal.store}')" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
-                                <span>Ver Oferta Directa</span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // RENDEREAR OFERTAS DESTACADAS
-        function renderFeaturedDeals() {
-            const grid = document.getElementById('featured-deals-grid');
-            const sortVal = document.getElementById('sort-select').value;
-
-            let filtered = dealsList.filter(d => currentFilterStore === 'all' || d.store === currentFilterStore);
-
-            if(sortVal === 'score') {
-                filtered.sort((a,b) => b.score - a.score || b.discount - a.discount);
-            } else if(sortVal === 'price-low') {
-                filtered.sort((a,b) => a.price - b.price);
-            } else if(sortVal === 'price-high') {
-                filtered.sort((a,b) => b.price - a.price);
-            }
-
-            grid.innerHTML = filtered.map(d => createDealCard(d)).join('');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function filterStore(store) {
-            currentFilterStore = store;
+            currentFilter = store;
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700";
             });
@@ -688,112 +537,178 @@
             renderFeaturedDeals();
         }
 
-        // BUSCADOR INTELIGENTE CON SUPABASE EDGE FUNCTION (PROXY SEGURO)
-        async function handleAISearch(e) {
-            e.preventDefault();
+        function renderFeaturedDeals() {
+            const grid = document.getElementById('featured-deals-grid');
+            let filtered = sampleDeals;
+            if (currentFilter !== 'all') {
+                filtered = sampleDeals.filter(d => d.store === currentFilter);
+            }
+
+            const sortBy = document.getElementById('sort-select').value;
+            if (sortBy === 'score') {
+                filtered.sort((a, b) => b.discount - a.discount);
+            } else if (sortBy === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            }
+
+            grid.innerHTML = filtered.map(deal => createDealCard(deal)).join('');
+        }
+
+        function createDealCard(deal) {
+            const isFav = favorites.some(f => f.id === deal.id);
+            const storeBadgeClass = deal.store === 'mercadolibre' ? 'badge-ml' : deal.store === 'amazon' ? 'badge-amz' : 'badge-ali';
+            const storeName = deal.store === 'mercadolibre' ? 'Mercado Libre' : deal.store === 'amazon' ? 'Amazon' : 'AliExpress';
+
+            // Añadir tag de afiliado al enlace si corresponde
+            let finalUrl = deal.url;
+            if (deal.store === 'mercadolibre' && appConfig.tagMl) {
+                finalUrl += (finalUrl.includes('?') ? '&' : '?') + `matt_tool=${appConfig.tagMl}`;
+            }
+
+            return `
+                <div class="bg-carbon-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-purple-500/50 transition-all duration-300 shadow-xl">
+                    <div class="relative overflow-hidden bg-slate-900 h-48 flex items-center justify-center">
+                        <img src="${deal.image}" alt="${deal.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${storeBadgeClass} shadow-md">
+                            ${storeName}
+                        </span>
+                        <button onclick="toggleFavorite(${deal.id})" class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-carbon/80 backdrop-blur-md flex items-center justify-center text-xs text-slate-300 hover:text-rose-500 border border-slate-700/50 transition-all">
+                            <i class="fa-${isFav ? 'solid text-rose-500' : 'regular'} fa-heart"></i>
+                        </button>
+                        <div class="absolute bottom-3 left-3 bg-emerald-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow-md">
+                            -${deal.discount}% OFF
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                <span class="flex items-center gap-1 text-amber-400 font-bold"><i class="fa-solid fa-star"></i> ${deal.score}</span>
+                                <span class="bg-slate-800 px-2 py-0.5 rounded text-slate-300"><i class="fa-solid fa-clock"></i> ${deal.expiryHours}h restantes</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white line-clamp-2 group-hover:text-purple-300 transition-colors">${deal.title}</h3>
+                        </div>
+                        <div class="space-y-3 pt-2 border-t border-slate-800/80">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-2xl font-black text-white">$${deal.price}</span>
+                                <span class="text-xs text-slate-500 line-through">$${deal.originalPrice}</span>
+                            </div>
+                            <a href="${finalUrl}" target="_blank" onclick="trackClick('${deal.store}')" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Oferta Real
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ================= BUSCADOR IA (SUPABASE EDGE FUNCTION) ================= //
+        async function handleAISearch(event) {
+            event.preventDefault();
             const query = document.getElementById('ai-input').value.trim();
-            if(!query) return;
+            if (!query) return;
 
-            document.getElementById('ai-loading').classList.remove('hidden');
-            document.getElementById('ai-results-container').classList.add('hidden');
+            addRecentSearch(query);
 
-            if(!recentSearches.includes(query)) {
-                recentSearches.unshift(query);
-                if(recentSearches.length > 5) recentSearches.pop();
-                localStorage.setItem('promo_searches', JSON.stringify(recentSearches));
-                renderRecentSearches();
-            }
+            const loading = document.getElementById('ai-loading');
+            const container = document.getElementById('ai-results-container');
+            const grid = document.getElementById('ai-deals-grid');
 
-            const sbUrl = adminConfig.supabaseUrl || localStorage.getItem('promo_sb_url');
-            const sbKey = adminConfig.supabaseKey || '';
-            const tagML = adminConfig.tagML || 'TU_TAG';
-
-            if (!sbUrl) {
-                document.getElementById('ai-loading').classList.add('hidden');
-                showToast('Configura tu Supabase URL en el Panel de Admin', 'error');
-                openAdminModal();
-                return;
-            }
+            loading.classList.remove('hidden');
+            container.classList.add('hidden');
+            grid.innerHTML = '';
 
             try {
-                // Preparamos los headers de forma segura para Supabase Edge Functions
-                const headers = {
-                    'Content-Type': 'application/json'
-                };
-                if (sbKey) {
-                    headers['Authorization'] = `Bearer ${sbKey}`;
-                    headers['apikey'] = sbKey;
-                }
+                // URL por defecto de tu Supabase Edge Function o la configurada
+                const supabaseUrl = appConfig.supabaseUrl || 'https://pzyqhjelwuilcgzgxjbm.supabase.co';
+                const functionUrl = `${supabaseUrl}/functions/v1/buscadorofertas`;
 
-                const response = await fetch(`${sbUrl}/functions/v1/buscadorofertas`, {
+                const response = await fetch(functionUrl, {
                     method: 'POST',
-                    headers: headers,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(appConfig.supabaseKey ? { 'Authorization': `Bearer ${appConfig.supabaseKey}` } : {})
+                    },
                     body: JSON.stringify({
                         busqueda: query,
-                        tienda: 'Mercado Libre',
-                        tagAfiliado: tagML
+                        tagAfiliado: appConfig.tagMl || 'default'
                     })
                 });
 
                 const data = await response.json();
-                document.getElementById('ai-loading').classList.add('hidden');
-                document.getElementById('ai-results-container').classList.remove('hidden');
+                loading.classList.add('hidden');
+                container.classList.remove('hidden');
 
                 if (data.success && data.ofertas && data.ofertas.length > 0) {
                     const mappedDeals = data.ofertas.map((item, index) => ({
-                        id: 9000 + index,
-                        title: item.titulo,
+                        id: item.id || (9000 + index),
+                        title: item.title,
                         store: 'mercadolibre',
-                        price: item.precio_oferta,
-                        originalPrice: item.precio_original,
-                        discount: item.descuento,
-                        score: item.puntuacion || 4.8,
+                        price: item.price,
+                        originalPrice: item.originalPrice,
+                        discount: item.discount,
+                        score: item.score || 4.8,
                         expiryHours: 24,
-                        image: item.imagen_url,
-                        url: item.link_afiliado,
+                        image: item.image,
+                        url: item.url,
                         keywords: query.toLowerCase().split(' ')
                     }));
 
                     document.getElementById('ai-result-count').innerText = `${mappedDeals.length} ofertas reales encontradas`;
-                    document.getElementById('ai-deals-grid').innerHTML = mappedDeals.map(d => createDealCard(d)).join('');
-                    showToast('¡Ofertas reales obtenidas de forma segura!', 'success');
+                    grid.innerHTML = mappedDeals.map(d => createDealCard(d)).join('');
+                    showToast('¡Ofertas reales obtenidas de forma segura a través de Supabase!', 'success');
                 } else {
                     document.getElementById('ai-result-count').innerText = '0 resultados';
-                    document.getElementById('ai-deals-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda.</div>';
+                    grid.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda.</div>';
                 }
-            } catch (error) {
-                console.error('Error Edge Function:', error);
-                document.getElementById('ai-loading').classList.add('hidden');
-                document.getElementById('ai-results-container').classList.remove('hidden');
-                showToast('Error al conectar con la Edge Function de Supabase', 'error');
+            } catch (err) {
+                loading.classList.add('hidden');
+                container.classList.remove('hidden');
+                document.getElementById('ai-result-count').innerText = 'Error de conexión';
+                grid.innerHTML = '<div class="col-span-full text-center py-8 text-rose-400">Error al conectar con la Supabase Edge Function. Revisa la URL en administración.</div>';
+                showToast('Error al consultar el proxy seguro', 'error');
             }
         }
 
-        function setAISearch(text) {
-            document.getElementById('ai-input').value = text;
-            handleAISearch(new Event('submit'));
+        function setAISearch(term) {
+            document.getElementById('ai-input').value = term;
+            switchTab('ai-search');
+        }
+
+        function addRecentSearch(term) {
+            if (!recentSearches.includes(term)) {
+                recentSearches.unshift(term);
+                if (recentSearches.length > 6) recentSearches.pop();
+                localStorage.setItem('promocentral_recent', JSON.stringify(recentSearches));
+                renderRecentSearches();
+            }
         }
 
         function renderRecentSearches() {
-            const container = document.getElementById('recent-searches-list');
-            container.innerHTML = recentSearches.map(s => `
-                <button onclick="setAISearch('${s}')" class="bg-slate-900 hover:bg-purple-900/30 border border-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-magnifying-glass text-[10px] text-purple-400"></i> ${s}
+            const list = document.getElementById('recent-searches-list');
+            list.innerHTML = recentSearches.map(term => `
+                <button onclick="setAISearch('${term}')" class="bg-slate-800 hover:bg-purple-900/40 border border-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-magnifying-glass text-purple-400"></i> ${term}
                 </button>
             `).join('');
         }
 
-        // FAVORITOS Y VIGENCIA
+        // ================= GESTIÓN DE FAVORITOS ================= //
         function toggleFavorite(id) {
-            const idx = favoriteIds.indexOf(id);
-            if(idx > -1) {
-                favoriteIds.splice(idx, 1);
-                showToast('Producto eliminado de Favoritos', 'info');
+            const deal = sampleDeals.find(d => d.id === id);
+            if (!deal) return;
+
+            const index = favorites.findIndex(f => f.id === id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                showToast('Producto eliminado de favoritos', 'info');
             } else {
-                favoriteIds.push(id);
-                showToast('¡Guardado en Favoritos!', 'success');
+                favorites.push(deal);
+                showToast('¡Producto guardado en favoritos!', 'success');
             }
-            localStorage.setItem('promo_favs', JSON.stringify(favoriteIds));
+
+            localStorage.setItem('promocentral_favs', JSON.stringify(favorites));
             updateFavBadge();
             renderFeaturedDeals();
             renderFavorites();
@@ -801,8 +716,8 @@
 
         function updateFavBadge() {
             const badge = document.getElementById('fav-badge');
-            if(favoriteIds.length > 0) {
-                badge.innerText = favoriteIds.length;
+            if (favorites.length > 0) {
+                badge.innerText = favorites.length;
                 badge.classList.remove('hidden');
             } else {
                 badge.classList.add('hidden');
@@ -811,29 +726,28 @@
 
         function renderFavorites() {
             const grid = document.getElementById('favorites-grid');
-            const emptyState = document.getElementById('favorites-empty');
+            const empty = document.getElementById('favorites-empty');
 
-            const favDeals = dealsList.filter(d => favoriteIds.includes(d.id));
-
-            if(favDeals.length === 0) {
+            if (favorites.length === 0) {
                 grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                grid.innerHTML = favDeals.map(d => createDealCard(d, true)).join('');
+                empty.classList.remove('hidden');
+                return;
             }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = favorites.map(deal => createDealCard(deal)).join('');
         }
 
         function clearFavorites() {
-            favoriteIds = [];
-            localStorage.setItem('promo_favs', JSON.stringify(favoriteIds));
+            favorites = [];
+            localStorage.removeItem('promocentral_favs');
             updateFavBadge();
             renderFavorites();
             renderFeaturedDeals();
-            showToast('Favoritos vaciados', 'info');
+            showToast('Lista de favoritos limpiada', 'info');
         }
 
-        // MODAL Y LOGIN ADMIN
+        // ================= PANEL DE ADMINISTRADOR & CONFIG ================= //
         function openAdminModal() {
             document.getElementById('admin-modal').classList.remove('hidden');
         }
@@ -842,166 +756,135 @@
             document.getElementById('admin-modal').classList.add('hidden');
         }
 
-        function handleAdminLogin(e) {
-            e.preventDefault();
+        function handleAdminLogin(event) {
+            event.preventDefault();
             const pass = document.getElementById('admin-pass').value;
-            if(pass === 'admin123' || pass === 'admin') {
+            if (pass === 'admin123') {
                 closeAdminModal();
                 switchTab('admin');
-                showToast('Sesión iniciada como Administrador', 'success');
+                initCharts();
+                showToast('Acceso de administrador concedido', 'success');
             } else {
-                showToast('Contraseña incorrecta', 'error');
+                showToast('Contraseña incorrecta (por defecto: admin123)', 'error');
             }
         }
 
         function logoutAdmin() {
             switchTab('featured');
-            showToast('Sesión cerrada', 'info');
+            showToast('Sesión de administrador cerrada', 'info');
         }
 
-        // CONFIGURACIONES DE ADMIN
-        function loadAdminConfigFields() {
-            document.getElementById('cfg-supabase-url').value = adminConfig.supabaseUrl || '';
-            document.getElementById('cfg-supabase-key').value = adminConfig.supabaseKey || '';
-            document.getElementById('cfg-tag-ml').value = adminConfig.tagML || '';
-            document.getElementById('cfg-tag-amz').value = adminConfig.tagAMZ || '';
-            document.getElementById('cfg-tag-ali').value = adminConfig.tagALI || '';
+        function saveAdminSettings(event) {
+            event.preventDefault();
+            appConfig.supabaseUrl = document.getElementById('cfg-supabase-url').value;
+            appConfig.supabaseKey = document.getElementById('cfg-supabase-key').value;
+            appConfig.tagMl = document.getElementById('cfg-tag-ml').value;
+            appConfig.tagAmz = document.getElementById('cfg-tag-amz').value;
+            appConfig.tagAli = document.getElementById('cfg-tag-ali').value;
+
+            localStorage.setItem('promocentral_config', JSON.stringify(appConfig));
+            showToast('Configuración y Tags guardados correctamente', 'success');
         }
 
-        function saveAdminSettings(e) {
-            e.preventDefault();
-            adminConfig.supabaseUrl = document.getElementById('cfg-supabase-url').value.trim();
-            adminConfig.supabaseKey = document.getElementById('cfg-supabase-key').value.trim();
-            adminConfig.tagML = document.getElementById('cfg-tag-ml').value.trim();
-            adminConfig.tagAMZ = document.getElementById('cfg-tag-amz').value.trim();
-            adminConfig.tagALI = document.getElementById('cfg-tag-ali').value.trim();
-
-            localStorage.setItem('promo_admin_cfg', JSON.stringify(adminConfig));
-            renderFeaturedDeals();
-            showToast('Configuraciones y Tags guardados correctamente', 'success');
+        function loadConfigToForm() {
+            document.getElementById('cfg-supabase-url').value = appConfig.supabaseUrl || '';
+            document.getElementById('cfg-supabase-key').value = appConfig.supabaseKey || '';
+            document.getElementById('cfg-tag-ml').value = appConfig.tagMl || '';
+            document.getElementById('cfg-tag-amz').value = appConfig.tagAmz || '';
+            document.getElementById('cfg-tag-ali').value = appConfig.tagAli || '';
         }
 
-        function addNewDealManual(e) {
-            e.preventDefault();
+        function addNewDealManual(event) {
+            event.preventDefault();
             const newDeal = {
                 id: Date.now(),
                 title: document.getElementById('new-title').value,
                 store: document.getElementById('new-store').value,
                 price: parseFloat(document.getElementById('new-price').value),
                 originalPrice: parseFloat(document.getElementById('new-old-price').value),
-                discount: Math.round((1 - (document.getElementById('new-price').value / document.getElementById('new-old-price').value)) * 100),
-                score: 9.0,
+                discount: Math.round((1 - parseFloat(document.getElementById('new-price').value) / parseFloat(document.getElementById('new-old-price').value)) * 100),
+                score: 9.9,
                 expiryHours: 24,
                 image: document.getElementById('new-image').value,
                 url: document.getElementById('new-url').value,
-                keywords: document.getElementById('new-title').value.toLowerCase().split(' ')
+                keywords: ['manual', 'oferta']
             };
 
-            dealsList.unshift(newDeal);
-            localStorage.setItem('promo_deals', JSON.stringify(dealsList));
+            sampleDeals.unshift(newDeal);
             renderFeaturedDeals();
-            showToast('¡Nueva oferta publicada!', 'success');
-            e.target.reset();
+            event.target.reset();
+            showToast('¡Oferta publicada exitosamente!', 'success');
+            switchTab('featured');
         }
 
-        // TRÁFICO / CLICS TRACKING
-        function trackClick(store) {
-            let clicks = parseInt(localStorage.getItem('total_clicks') || '1248');
-            clicks += 1;
-            localStorage.setItem('total_clicks', clicks.toString());
-            const statEl = document.getElementById('stat-clicks');
-            if(statEl) statEl.innerText = clicks.toLocaleString();
-        }
+        // ================= GRÁFICOS CHART.JS ================= //
+        let chartsInitialized = false;
+        function initCharts() {
+            if (chartsInitialized) return;
+            chartsInitialized = true;
 
-        // CHARTS INTEGRADOS
-        function initAdminCharts() {
-            const ctxTraffic = document.getElementById('chart-traffic');
-            const ctxPie = document.getElementById('chart-pie');
-
-            if(!ctxTraffic || !ctxPie) return;
-
-            if(trafficChartInstance) trafficChartInstance.destroy();
-            if(pieChartInstance) pieChartInstance.destroy();
-
-            trafficChartInstance = new Chart(ctxTraffic, {
+            const ctxTraffic = document.getElementById('chart-traffic').getContext('2d');
+            new Chart(ctxTraffic, {
                 type: 'line',
                 data: {
                     labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
                     datasets: [
-                        {
-                            label: 'Mercado Libre',
-                            data: [120, 190, 170, 220, 300, 280, 350],
-                            borderColor: '#ffe600',
-                            tension: 0.3
-                        },
-                        {
-                            label: 'Amazon',
-                            data: [90, 140, 130, 180, 210, 190, 240],
-                            borderColor: '#ff9900',
-                            tension: 0.3
-                        },
-                        {
-                            label: 'AliExpress',
-                            data: [50, 70, 60, 90, 120, 110, 130],
-                            borderColor: '#ff4747',
-                            tension: 0.3
-                        }
+                        { label: 'Mercado Libre', data: [120, 190, 150, 220, 280, 310, 350], borderColor: '#ffe600', backgroundColor: 'rgba(255, 230, 0, 0.1)', tension: 0.3 },
+                        { label: 'Amazon', data: [80, 110, 130, 170, 210, 250, 290], borderColor: '#ff9900', backgroundColor: 'rgba(255, 153, 0, 0.1)', tension: 0.3 },
+                        { label: 'AliExpress', data: [40, 60, 90, 120, 150, 180, 210], borderColor: '#ff4747', backgroundColor: 'rgba(255, 71, 71, 0.1)', tension: 0.3 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8' } } },
-                    scales: {
-                        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
-                        y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } }
             });
 
-            pieChartInstance = new Chart(ctxPie, {
+            const ctxPie = document.getElementById('chart-pie').getContext('2d');
+            new Chart(ctxPie, {
                 type: 'doughnut',
                 data: {
                     labels: ['Mercado Libre', 'Amazon', 'AliExpress'],
-                    datasets: [{
-                        data: [50, 32, 18],
-                        backgroundColor: ['#ffe600', '#ff9900', '#ff4747']
-                    }]
+                    datasets: [{ data: [45, 35, 20], backgroundColor: ['#ffe600', '#ff9900', '#ff4747'], borderWidth: 0 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8' } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } } }
             });
         }
 
-        // TOAST NOTIFICATIONS
-        function showToast(msg, type = 'info') {
+        // ================= NOTIFICACIONES TOAST ================= //
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
-            let colorClass = 'bg-slate-800 border-slate-700 text-white';
-            if(type === 'success') colorClass = 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200';
-            if(type === 'error') colorClass = 'bg-rose-950/90 border-rose-500/50 text-rose-200';
+            const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-purple-600';
+            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info';
 
-            toast.className = `px-4 py-3 rounded-xl border ${colorClass} text-xs font-semibold shadow-xl backdrop-blur-md transition-all flex items-center gap-2 transform translate-y-2 opacity-0`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold transform translate-y-5 opacity-0 transition-all duration-300`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${message}</span>`;
 
             container.appendChild(toast);
-
             setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
+                toast.classList.remove('translate-y-5', 'opacity-0');
             }, 50);
 
             setTimeout(() => {
-                toast.classList.add('opacity-0');
+                toast.classList.add('translate-y-5', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 3500);
         }
 
         function requestNotificationPermission() {
-            showToast('Simulador de notificaciones activado en navegador', 'success');
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        showToast('¡Notificaciones Push activadas con éxito!', 'success');
+                    } else {
+                        showToast('Permiso de notificaciones denegado', 'error');
+                    }
+                });
+            } else {
+                showToast('Tu navegador no soporta notificaciones', 'error');
+            }
+        }
+
+        function trackClick(store) {
+            console.log(`Clic registrado en plataforma: ${store}`);
         }
     </script>
 </body>
