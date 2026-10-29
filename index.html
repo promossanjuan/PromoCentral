@@ -31,6 +31,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -49,20 +51,10 @@
         .badge-amz { background-color: #ff9900; color: #111; }
         .badge-ali { background-color: #ff4747; color: #fff; }
         
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0f1d;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8b5cf6;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0f1d; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased selection:bg-purple-500 selection:text-white">
@@ -84,7 +76,7 @@
                 </div>
             </div>
 
-            <!-- NAVEGACIÓN PRINCIPAL (ESCRITORIO) -->
+            <!-- NAVEGACIÓN PRINCIPAL -->
             <nav class="hidden md:flex items-center gap-2 bg-carbon-card p-1.5 rounded-2xl border border-slate-800">
                 <button id="nav-featured" onclick="switchTab('featured')" class="nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md">
                     <i class="fa-solid fa-fire text-amber-300"></i> Ofertas Destacadas
@@ -107,22 +99,6 @@
                 </button>
             </div>
         </div>
-
-        <!-- BARRA NAVEGACIÓN MÓVIL -->
-        <div class="md:hidden flex border-t border-slate-800/80 bg-carbon-card px-2 py-2 justify-around">
-            <button id="nav-mobile-featured" onclick="switchTab('featured')" class="nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-purple-400 text-xs font-medium">
-                <i class="fa-solid fa-fire text-base mb-1"></i>
-                Ofertas
-            </button>
-            <button id="nav-mobile-ai-search" onclick="switchTab('ai-search')" class="nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium">
-                <i class="fa-solid fa-robot text-base mb-1"></i>
-                Buscador IA
-            </button>
-            <button id="nav-mobile-favorites" onclick="switchTab('favorites')" class="nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium relative">
-                <i class="fa-solid fa-heart text-base mb-1"></i>
-                Favoritos
-            </button>
-        </div>
     </header>
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -132,25 +108,16 @@
         <section id="tab-featured" class="tab-content space-y-8">
             <!-- BANNER PRINCIPAL -->
             <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-carbon-card via-slate-900 to-purple-950 border border-slate-800 p-8 sm:p-10 shadow-2xl">
-                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 max-w-2xl">
                     <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-4">
-                        <i class="fa-solid fa-bolt"></i> Algoritmo de Calificación Dinámica
+                        <i class="fa-solid fa-database"></i> Base de Datos Supabase Conectada
                     </span>
                     <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-4 leading-tight">
-                        Las mejores promociones <span class="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">en un solo lugar</span>
+                        Las mejores promociones <span class="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">verificadas en vivo</span>
                     </h1>
                     <p class="text-slate-400 text-sm sm:text-base mb-6">
-                        Recopilamos, verificamos y ordenamos de mayor a descuento las ofertas reales de Mercado Libre, Amazon y AliExpress para que no pagues de más.
+                        Ofertas reales de Mercado Libre, Amazon y AliExpress sincronizadas automáticamente por nuestros bots.
                     </p>
-                    <div class="flex flex-wrap gap-4 text-xs text-slate-300">
-                        <span class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/50">
-                            <i class="fa-solid fa-check text-emerald-400"></i> Links Directos Verificados
-                        </span>
-                        <span class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/50">
-                            <i class="fa-solid fa-sync text-purple-400"></i> Actualización cada 15 min
-                        </span>
-                    </div>
                 </div>
             </div>
 
@@ -162,730 +129,169 @@
                     <button onclick="filterStore('amazon')" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Amazon</button>
                     <button onclick="filterStore('aliexpress')" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">AliExpress</button>
                 </div>
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <label class="text-xs text-slate-400 font-medium whitespace-nowrap">Ordenar por:</label>
-                    <select id="sort-select" onchange="renderFeaturedDeals()" class="w-full sm:w-auto bg-carbon-light border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-purple-500">
-                        <option value="score">Mayor Puntuación / Descuento</option>
-                        <option value="price-low">Precio: Menor a Mayor</option>
-                        <option value="price-high">Precio: Mayor a Menor</option>
-                    </select>
-                </div>
             </div>
 
             <!-- GRILLA DE PRODUCTOS -->
             <div id="featured-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Se llena mediante Javascript -->
+                <!-- Carga desde Supabase -->
             </div>
         </section>
 
         <!-- ================= PESTAÑA 2: BUSCADOR INTELIGENTE IA ================= -->
         <section id="tab-ai-search" class="tab-content hidden space-y-8">
-            <div class="bg-carbon-card border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-                <div class="max-w-3xl mx-auto text-center space-y-4">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30">
-                        <i class="fa-solid fa-brain"></i> Motor Supabase Edge Function AI (Proxy Seguro)
-                    </div>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white">¿Qué estás buscando exactamente?</h2>
-                    <p class="text-slate-400 text-sm">
-                        Escribe lo que buscas. Consultaremos las ofertas de manera segura a través del backend de Supabase evitando bloqueos CORS.
-                    </p>
-
-                    <!-- BUSCADOR INPUT -->
-                    <form onsubmit="handleAISearch(event)" class="mt-6 relative">
-                        <div class="relative flex items-center">
-                            <input type="text" id="ai-input" placeholder="Ej: Smartphone, Notebook, Auriculares..." class="w-full pl-5 pr-36 py-4 rounded-2xl bg-slate-900/90 border-2 border-purple-500/40 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-purple-500 transition-all shadow-inner">
-                            <button type="submit" class="absolute right-2 top-2 bottom-2 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                <span class="hidden sm:inline">Buscar Ofertas</span>
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- SUGERENCIAS RÁPIDAS -->
-                    <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs">
-                        <span class="text-slate-500">Sugerencias:</span>
-                        <button onclick="setAISearch('Notebook')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">💻 Notebook</button>
-                        <button onclick="setAISearch('Auriculares inalambricos')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">🎧 Auriculares</button>
-                        <button onclick="setAISearch('Smart TV')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">📺 Smart TV</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- LOADER DE IA -->
-            <div id="ai-loading" class="hidden text-center py-12 space-y-4">
-                <div class="inline-block p-4 bg-purple-500/10 rounded-full border border-purple-500/30 animate-pulse">
-                    <i class="fa-solid fa-robot text-4xl text-purple-400 animate-spin"></i>
-                </div>
-                <p class="text-purple-300 font-medium text-sm">Consultando de forma segura mediante Supabase Edge Function...</p>
-            </div>
-
-            <!-- RESULTADOS DE BÚSQUEDA IA -->
-            <div id="ai-results-container" class="hidden space-y-4">
-                <div class="flex justify-between items-center px-1">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sparkles text-purple-400"></i> Resultados Encontrados
-                    </h3>
-                    <span id="ai-result-count" class="text-xs text-slate-400"></span>
-                </div>
-                <div id="ai-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-            </div>
-
-            <!-- ÚLTIMAS BÚSQUEDAS Y NOTIFICACIONES PUSH SIMULADAS -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
-                <!-- Historial -->
-                <div class="md:col-span-2 bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
-                    <h3 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Tus Últimas Búsquedas Relacionadas
-                    </h3>
-                    <div id="recent-searches-list" class="flex flex-wrap gap-2">
-                        <!-- Llenado dinámico -->
-                    </div>
-                </div>
-
-                <!-- Notificaciones Simuladas -->
-                <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-bell text-amber-400"></i> Alertas de Ofertas
-                            </h3>
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        </div>
-                        <p class="text-xs text-slate-400">Recibe notificaciones inmediatas en tu navegador cuando un producto baje de precio.</p>
-                    </div>
-                    <button onclick="requestNotificationPermission()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-mobile-screen"></i> Activar Notificaciones Push
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= PESTAÑA 3: MIS FAVORITOS ================= -->
-        <section id="tab-favorites" class="tab-content hidden space-y-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-carbon-card p-6 rounded-2xl border border-slate-800">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-bookmark text-purple-400"></i> Tu Lista de Favoritos
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">Los productos que guardaste para revisar o comprar más tarde con estado de vigencia en tiempo real.</p>
-                </div>
-                <button onclick="clearFavorites()" class="text-xs text-rose-400 hover:text-rose-300 font-medium border border-rose-500/20 px-3 py-1.5 rounded-xl hover:bg-rose-500/10 transition-all">
-                    <i class="fa-solid fa-trash-can"></i> Limpiar Todo
-                </button>
-            </div>
-
-            <!-- GRILLA FAVORITOS -->
-            <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Llenado dinámico -->
-            </div>
-
-            <!-- EMPTY STATE -->
-            <div id="favorites-empty" class="hidden text-center py-16 bg-carbon-card border border-slate-800 rounded-2xl space-y-4">
-                <i class="fa-solid fa-heart-crack text-5xl text-slate-700"></i>
-                <p class="text-slate-400 text-sm">Aún no has guardado ningún producto en tus favoritos.</p>
-                <button onclick="switchTab('featured')" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl transition-all">
-                    Explorar Promociones
-                </button>
-            </div>
-        </section>
-
-        <!-- ================= PANEL DE ADMINISTRADOR ================= -->
-        <section id="tab-admin" class="tab-content hidden space-y-8">
-            <div class="flex justify-between items-center bg-carbon-card p-6 rounded-2xl border border-slate-800">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-user-gear text-purple-400"></i> Panel de Control de Afiliado
-                    </h2>
-                    <p class="text-xs text-slate-400">Gestiona tus configuraciones de Supabase, Tags de Afiliado y analíticas de clics.</p>
-                </div>
-                <button onclick="logoutAdmin()" class="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
-                </button>
-            </div>
-
-            <!-- DASHBOARD DE GRÁFICOS / TRÁFICO -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
-                    <p class="text-xs text-slate-400 font-medium">Clics Totales</p>
-                    <p id="stat-clicks" class="text-3xl font-black text-white mt-1">1,248</p>
-                    <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-2">
-                        <i class="fa-solid fa-arrow-trend-up"></i> +18.4% este mes
-                    </span>
-                </div>
-                <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
-                    <p class="text-xs text-slate-400 font-medium">Comisión Est. Mercado Libre</p>
-                    <p class="text-3xl font-black text-amber-400 mt-1">$240.50</p>
-                    <span class="text-[10px] text-slate-400 mt-2 block">Tag configurado</span>
-                </div>
-                <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
-                    <p class="text-xs text-slate-400 font-medium">Comisión Est. Amazon</p>
-                    <p class="text-3xl font-black text-orange-400 mt-1">$185.20</p>
-                    <span class="text-[10px] text-slate-400 mt-2 block">Tag configurado</span>
-                </div>
-                <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
-                    <p class="text-xs text-slate-400 font-medium">Comisión Est. AliExpress</p>
-                    <p class="text-3xl font-black text-rose-400 mt-1">$98.10</p>
-                    <span class="text-[10px] text-slate-400 mt-2 block">Tag configurado</span>
-                </div>
-            </div>
-
-            <!-- CHARTS -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-chart-line text-purple-400"></i> Clics Diarios por Plataforma
-                    </h3>
-                    <div class="h-64">
-                        <canvas id="chart-traffic"></canvas>
-                    </div>
-                </div>
-                <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-purple-400"></i> Distribución de Tráfico
-                    </h3>
-                    <div class="h-64 flex justify-center">
-                        <canvas id="chart-pie"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CONFIGURACIÓN API SUPABASE Y TAGS -->
-            <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-6">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-purple-400"></i> Configuración de Integración & Tags
-                </h3>
-                
-                <form onsubmit="saveAdminSettings(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Supabase URL</label>
-                            <input type="text" id="cfg-supabase-url" placeholder="https://tu-proyecto.supabase.co" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Supabase API Key (Anon / Public)</label>
-                            <input type="password" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1Ni..." class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-800 my-4">
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-store text-yellow-400"></i> Tag Afiliado Mercado Libre</label>
-                            <input type="text" id="cfg-tag-ml" placeholder="ml_afiliado_tag" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-brands fa-amazon text-amber-400"></i> Tag Afiliado Amazon</label>
-                            <input type="text" id="cfg-tag-amz" placeholder="amazon_tag-20" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-bag-shopping text-rose-400"></i> Tag Afiliado AliExpress</label>
-                            <input type="text" id="cfg-tag-ali" placeholder="ali_affiliate_id" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end pt-2">
-                        <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+            <div class="bg-carbon-card border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-4">
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-white">¿Qué producto estás buscando?</h2>
+                <form onsubmit="handleAISearch(event)" class="mt-6 relative max-w-2xl mx-auto">
+                    <div class="relative flex items-center">
+                        <input type="text" id="ai-input" placeholder="Ej: Notebook, Samsung, Auriculares..." class="w-full pl-5 pr-36 py-4 rounded-2xl bg-slate-900 border-2 border-purple-500/40 text-slate-100 text-sm focus:outline-none focus:border-purple-500">
+                        <button type="submit" class="absolute right-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-sm">
+                            Buscar
                         </button>
                     </div>
                 </form>
             </div>
 
-            <!-- AÑADIR NUEVA OFERTA MANUALLY -->
-            <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-purple-400"></i> Publicar Nueva Oferta Manualmente
-                </h3>
-                <form onsubmit="addNewDealManual(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" id="new-title" placeholder="Título del Producto" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <select id="new-store" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        <option value="mercadolibre">Mercado Libre</option>
-                        <option value="amazon">Amazon</option>
-                        <option value="aliexpress">AliExpress</option>
-                    </select>
-                    <input type="number" id="new-price" placeholder="Precio Final (USD)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <input type="number" id="new-old-price" placeholder="Precio Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <input type="url" id="new-image" placeholder="URL Imagen" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <input type="url" id="new-url" placeholder="URL Producto Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    
-                    <button type="submit" class="md:col-span-3 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">
-                        <i class="fa-solid fa-upload"></i> Publicar Oferta en la Web
-                    </button>
-                </form>
+            <div id="ai-loading" class="hidden text-center py-12">
+                <i class="fa-solid fa-spinner text-4xl text-purple-400 animate-spin mb-3"></i>
+                <p class="text-slate-400 text-sm">Consultando base de datos centralizada Supabase...</p>
             </div>
+
+            <div id="ai-results-container" class="hidden space-y-4">
+                <h3 id="ai-result-count" class="text-lg font-bold text-white"></h3>
+                <div id="ai-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- ================= PESTAÑA 3: FAVORITOS ================= -->
+        <section id="tab-favorites" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-bookmark text-purple-400"></i> Tus Favoritos</h2>
+            <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-carbon-card border-t border-slate-800 py-8 mt-12 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4 space-y-3">
-            <p>© 2026 PromoCentral - Todos los derechos reservados. Participamos en programas de afiliados.</p>
-            <p class="text-[11px] text-slate-600">Mercado Libre, Amazon y AliExpress son marcas registradas de sus respectivos dueños.</p>
-        </div>
+    <footer class="bg-carbon-card border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        © 2026 PromoCentral - Sistema con Base de Datos Supabase Sincronizada
     </footer>
 
-    <!-- MODAL DE LOGIN ADMIN -->
-    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-carbon-card border border-purple-500/30 w-full max-w-md rounded-3xl p-8 shadow-2xl relative glow-purple">
-            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="text-center space-y-3 mb-6">
-                <div class="w-12 h-12 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-2xl flex items-center justify-center mx-auto text-xl">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white">Acceso Administrador</h3>
-                <p class="text-xs text-slate-400">Ingresa la contraseña para acceder al panel de control.</p>
-            </div>
-
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div>
-                    <input type="password" id="admin-pass" placeholder="Contraseña (por defecto: admin123)" class="w-full px-4 py-3 rounded-xl bg-carbon-light border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
-                </div>
-                <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition-all">
-                    Ingresar al Panel
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- LOGICA JAVASCRIPT INTEGRADA -->
+    <!-- LÓGICA JAVASCRIPT & CONEXIÓN SUPABASE -->
     <script>
-        // DATOS MOCK INICIALES DE OFERTAS
-        let sampleDeals = [
-            {
-                id: 1,
-                title: "Smartphone Samsung Galaxy S23 256GB Ultra HD",
-                store: "mercadolibre",
-                price: 649,
-                originalPrice: 899,
-                discount: 28,
-                score: 9.8,
-                expiryHours: 12,
-                image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com.ar",
-                keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"]
-            },
-            {
-                id: 2,
-                title: "Auriculares Sony WH-1000XM5 Cancelación Ruido",
-                store: "amazon",
-                price: 298,
-                originalPrice: 399,
-                discount: 25,
-                score: 9.5,
-                expiryHours: 8,
-                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
-                url: "https://amazon.com",
-                keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"]
-            }
-        ];
+        // CONFIGURACIÓN DE TU BASE DE DATOS SUPABASE
+        const SUPABASE_URL = 'https://TU_PROYECTO.supabase.co'; // <--- PEGA TU URL DE SUPABASE
+        const SUPABASE_ANON_KEY = 'TU_CLAVE_ANON_PUBLICA';      // <--- PEGA TU CLAVE ANON PÚBLICA
 
-        let favorites = JSON.parse(localStorage.getItem('promocentral_favs')) || [];
-        let currentFilter = 'all';
-        let recentSearches = JSON.parse(localStorage.getItem('promocentral_recent')) || ['Notebook', 'Smart TV'];
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Configuración guardada o por defecto
-        let appConfig = JSON.parse(localStorage.getItem('promocentral_config')) || {
-            supabaseUrl: 'https://pzyqhjelwuilcgzgxjbm.supabase.co',
-            supabaseKey: '',
-            tagMl: 'hg20261026145647177',
-            tagAmz: '',
-            tagAli: ''
-        };
+        let currentFilterStore = 'all';
+        let favoriteIds = JSON.parse(localStorage.getItem('promo_favs')) || [];
 
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             renderFeaturedDeals();
-            updateFavBadge();
-            renderFavorites();
-            renderRecentSearches();
-            loadConfigToForm();
         });
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-slate-400 hover:text-white flex items-center gap-2";
-            });
-            const activeDesktopBtn = document.getElementById(`nav-${tabId}`);
-            if (activeDesktopBtn) {
-                activeDesktopBtn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md";
-            }
-
-            document.querySelectorAll('.nav-mobile-btn').forEach(btn => {
-                btn.className = "nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium";
-            });
-            const activeMobileBtn = document.getElementById(`nav-mobile-${tabId}`);
-            if (activeMobileBtn) {
-                activeMobileBtn.className = "nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-purple-400 text-xs font-medium";
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function filterStore(store) {
-            currentFilter = store;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700";
-            });
-            event.target.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white border border-purple-500";
-            renderFeaturedDeals();
-        }
-
-        function renderFeaturedDeals() {
+        // CARGAR OFERTAS DESDE SUPABASE
+        async function renderFeaturedDeals() {
             const grid = document.getElementById('featured-deals-grid');
-            let filtered = sampleDeals;
-            if (currentFilter !== 'all') {
-                filtered = sampleDeals.filter(d => d.store === currentFilter);
+            grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400"><i class="fa-solid fa-spinner animate-spin text-2xl"></i> Cargando ofertas...</div>';
+
+            let query = supabaseClient.from('ofertas').select('*').eq('activo', true);
+            
+            if (currentFilterStore !== 'all') {
+                query = query.eq('tienda', currentFilterStore);
             }
 
-            const sortBy = document.getElementById('sort-select').value;
-            if (sortBy === 'score') {
-                filtered.sort((a, b) => b.discount - a.discount);
-            } else if (sortBy === 'price-low') {
-                filtered.sort((a, b) => a.price - b.price);
-            } else if (sortBy === 'price-high') {
-                filtered.sort((a, b) => b.price - a.price);
-            }
+            const { data, error } = await query;
 
-            grid.innerHTML = filtered.map(deal => createDealCard(deal)).join('');
-        }
-
-        function createDealCard(deal) {
-            const isFav = favorites.some(f => f.id === deal.id);
-            const storeBadgeClass = deal.store === 'mercadolibre' ? 'badge-ml' : deal.store === 'amazon' ? 'badge-amz' : 'badge-ali';
-            const storeName = deal.store === 'mercadolibre' ? 'Mercado Libre' : deal.store === 'amazon' ? 'Amazon' : 'AliExpress';
-
-            let finalUrl = deal.url;
-            if (deal.store === 'mercadolibre' && appConfig.tagMl) {
-                finalUrl += (finalUrl.includes('?') ? '&' : '?') + `matt_tool=${appConfig.tagMl}`;
-            }
-
-            return `
-                <div class="bg-carbon-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-purple-500/50 transition-all duration-300 shadow-xl">
-                    <div class="relative overflow-hidden bg-slate-900 h-48 flex items-center justify-center">
-                        <img src="${deal.image}" alt="${deal.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
-                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${storeBadgeClass} shadow-md">
-                            ${storeName}
-                        </span>
-                        <button onclick="toggleFavorite('${deal.id}')" class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-carbon/80 backdrop-blur-md flex items-center justify-center text-xs text-slate-300 hover:text-rose-500 border border-slate-700/50 transition-all">
-                            <i class="fa-${isFav ? 'solid text-rose-500' : 'regular'} fa-heart"></i>
-                        </button>
-                        <div class="absolute bottom-3 left-3 bg-emerald-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow-md">
-                            -${deal.discount}% OFF
-                        </div>
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow justify-between space-y-4">
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between text-[11px] text-slate-400">
-                                <span class="flex items-center gap-1 text-amber-400 font-bold"><i class="fa-solid fa-star"></i> ${deal.score}</span>
-                                <span class="bg-slate-800 px-2 py-0.5 rounded text-slate-300"><i class="fa-solid fa-clock"></i> ${deal.expiryHours}h restantes</span>
-                            </div>
-                            <h3 class="text-sm font-bold text-white line-clamp-2 group-hover:text-purple-300 transition-colors">${deal.title}</h3>
-                        </div>
-                        <div class="space-y-3 pt-2 border-t border-slate-800/80">
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-2xl font-black text-white">$${deal.price}</span>
-                                <span class="text-xs text-slate-500 line-through">$${deal.originalPrice}</span>
-                            </div>
-                            <a href="${finalUrl}" target="_blank" onclick="trackClick('${deal.store}')" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Oferta Real
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ================= BUSCADOR IA (SUPABASE EDGE FUNCTION) ================= //
-        async function handleAISearch(event) {
-            event.preventDefault();
-            const query = document.getElementById('ai-input').value.trim();
-            if (!query) return;
-
-            addRecentSearch(query);
-
-            const loading = document.getElementById('ai-loading');
-            const container = document.getElementById('ai-results-container');
-            const grid = document.getElementById('ai-deals-grid');
-
-            loading.classList.remove('hidden');
-            container.classList.add('hidden');
-            grid.innerHTML = '';
-
-            try {
-                const supabaseUrl = appConfig.supabaseUrl || 'https://pzyqhjelwuilcgzgxjbm.supabase.co';
-                const functionUrl = `${supabaseUrl}/functions/v1/buscadorofertas`;
-
-                const response = await fetch(functionUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(appConfig.supabaseKey ? { 'Authorization': `Bearer ${appConfig.supabaseKey}` } : {})
-                    },
-                    body: JSON.stringify({
-                        busqueda: query,
-                        q: query,
-                        query: query,
-                        tagAfiliado: appConfig.tagMl || 'hg20261026145647177'
-                    })
-                });
-
-                const data = await response.json();
-                console.log("Respuesta obtenida de la Edge Function:", data);
-
-                loading.classList.add('hidden');
-                container.classList.remove('hidden');
-
-                if (data.success && data.ofertas && data.ofertas.length > 0) {
-                    const mappedDeals = data.ofertas.map((item, index) => ({
-                        id: item.id || (9000 + index),
-                        title: item.title,
-                        store: 'mercadolibre',
-                        price: item.price,
-                        originalPrice: item.originalPrice,
-                        discount: item.discount,
-                        score: item.score || 4.8,
-                        expiryHours: 24,
-                        image: item.image,
-                        url: item.url,
-                        keywords: query.toLowerCase().split(' ')
-                    }));
-
-                    document.getElementById('ai-result-count').innerText = `${mappedDeals.length} ofertas reales encontradas`;
-                    grid.innerHTML = mappedDeals.map(d => createDealCard(d)).join('');
-                    showToast('¡Ofertas reales obtenidas exitosamente!', 'success');
-                } else {
-                    document.getElementById('ai-result-count').innerText = '0 resultados';
-                    grid.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda. Intenta con otra palabra más simple (ej: "celular" o "smart tv").</div>';
-                }
-            } catch (err) {
-                console.error("Error en petición:", err);
-                loading.classList.add('hidden');
-                container.classList.remove('hidden');
-                document.getElementById('ai-result-count').innerText = 'Error de conexión';
-                grid.innerHTML = '<div class="col-span-full text-center py-8 text-rose-400">Error al conectar con la Supabase Edge Function. Revisa la URL en administración.</div>';
-                showToast('Error al consultar el proxy seguro', 'error');
-            }
-        }
-
-        function setAISearch(term) {
-            document.getElementById('ai-input').value = term;
-            switchTab('ai-search');
-        }
-
-        function addRecentSearch(term) {
-            if (!recentSearches.includes(term)) {
-                recentSearches.unshift(term);
-                if (recentSearches.length > 6) recentSearches.pop();
-                localStorage.setItem('promocentral_recent', JSON.stringify(recentSearches));
-                renderRecentSearches();
-            }
-        }
-
-        function renderRecentSearches() {
-            const list = document.getElementById('recent-searches-list');
-            list.innerHTML = recentSearches.map(term => `
-                <button onclick="setAISearch('${term}')" class="bg-slate-800 hover:bg-purple-900/40 border border-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-magnifying-glass text-purple-400"></i> ${term}
-                </button>
-            `).join('');
-        }
-
-        // ================= GESTIÓN DE FAVORITOS ================= //
-        function toggleFavorite(id) {
-            const deal = sampleDeals.find(d => d.id == id);
-            if (!deal) return;
-
-            const index = favorites.findIndex(f => f.id == id);
-            if (index > -1) {
-                favorites.splice(index, 1);
-                showToast('Producto eliminado de favoritos', 'info');
-            } else {
-                favorites.push(deal);
-                showToast('¡Producto guardado en favoritos!', 'success');
-            }
-
-            localStorage.setItem('promocentral_favs', JSON.stringify(favorites));
-            updateFavBadge();
-            renderFeaturedDeals();
-            renderFavorites();
-        }
-
-        function updateFavBadge() {
-            const badge = document.getElementById('fav-badge');
-            if (favorites.length > 0) {
-                badge.innerText = favorites.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        function renderFavorites() {
-            const grid = document.getElementById('favorites-grid');
-            const empty = document.getElementById('favorites-empty');
-
-            if (favorites.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
+            if (error || !data || data.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400">No hay ofertas disponibles en la base de datos en este momento.</div>';
                 return;
             }
 
-            empty.classList.add('hidden');
-            grid.innerHTML = favorites.map(deal => createDealCard(deal)).join('');
+            grid.innerHTML = data.map(d => createDealCard({
+                id: d.id,
+                title: d.titulo,
+                store: d.tienda,
+                price: d.precio,
+                originalPrice: d.precio_original,
+                discount: d.descuento_porcentaje,
+                score: d.puntuacion || 9.5,
+                image: d.imagen_url,
+                url: d.url_afiliado
+            })).join('');
         }
 
-        function clearFavorites() {
-            favorites = [];
-            localStorage.removeItem('promocentral_favs');
-            updateFavBadge();
-            renderFavorites();
+        function filterStore(store) {
+            currentFilterStore = store;
             renderFeaturedDeals();
-            showToast('Lista de favoritos limpiada', 'info');
         }
 
-        // ================= PANEL DE ADMINISTRADOR & CONFIG ================= //
-        function openAdminModal() {
-            document.getElementById('admin-modal').classList.remove('hidden');
-        }
+        // BUSCADOR EN SUPABASE (SIN BLOQUEOS NI CORROS)
+        async function handleAISearch(e) {
+            e.preventDefault();
+            const queryVal = document.getElementById('ai-input').value.trim();
+            if (!queryVal) return;
 
-        function closeAdminModal() {
-            document.getElementById('admin-modal').classList.add('hidden');
-        }
+            document.getElementById('ai-loading').classList.remove('hidden');
+            document.getElementById('ai-results-container').classList.add('hidden');
 
-        function handleAdminLogin(event) {
-            event.preventDefault();
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === 'admin123') {
-                closeAdminModal();
-                switchTab('admin');
-                initCharts();
-                showToast('Acceso de administrador concedido', 'success');
+            const { data, error } = await supabaseClient
+                .from('ofertas')
+                .select('*')
+                .ilike('titulo', `%${queryVal}%`)
+                .eq('activo', true);
+
+            document.getElementById('ai-loading').classList.add('hidden');
+            document.getElementById('ai-results-container').classList.remove('hidden');
+
+            const grid = document.getElementById('ai-deals-grid');
+            if (data && data.length > 0) {
+                document.getElementById('ai-result-count').innerText = `${data.length} ofertas encontradas para "${queryVal}"`;
+                grid.innerHTML = data.map(d => createDealCard({
+                    id: d.id,
+                    title: d.titulo,
+                    store: d.tienda,
+                    price: d.precio,
+                    originalPrice: d.precio_original,
+                    discount: d.descuento_porcentaje,
+                    score: d.puntuacion || 9.5,
+                    image: d.imagen_url,
+                    url: d.url_afiliado
+                })).join('');
             } else {
-                showToast('Contraseña incorrecta (por defecto: admin123)', 'error');
+                document.getElementById('ai-result-count').innerText = `0 resultados para "${queryVal}"`;
+                grid.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos coincidentes en la base de datos.</div>';
             }
         }
 
-        function logoutAdmin() {
-            switchTab('featured');
-            showToast('Sesión de administrador cerrada', 'info');
-        }
+        // GENERADOR DE TARJETAS
+        function createDealCard(deal) {
+            let storeBadge = `<span class="badge-ml text-[10px] font-bold px-2 py-1 rounded">${deal.store.toUpperCase()}</span>`;
+            if(deal.store === 'amazon') storeBadge = `<span class="badge-amz text-[10px] font-bold px-2 py-1 rounded">AMAZON</span>`;
+            if(deal.store === 'aliexpress') storeBadge = `<span class="badge-ali text-[10px] font-bold px-2 py-1 rounded">ALIEXPRESS</span>`;
 
-        function saveAdminSettings(event) {
-            event.preventDefault();
-            appConfig.supabaseUrl = document.getElementById('cfg-supabase-url').value;
-            appConfig.supabaseKey = document.getElementById('cfg-supabase-key').value;
-            appConfig.tagMl = document.getElementById('cfg-tag-ml').value;
-            appConfig.tagAmz = document.getElementById('cfg-tag-amz').value;
-            appConfig.tagAli = document.getElementById('cfg-tag-ali').value;
-
-            localStorage.setItem('promocentral_config', JSON.stringify(appConfig));
-            showToast('Configuración y Tags guardados correctamente', 'success');
-        }
-
-        function loadConfigToForm() {
-            document.getElementById('cfg-supabase-url').value = appConfig.supabaseUrl || '';
-            document.getElementById('cfg-supabase-key').value = appConfig.supabaseKey || '';
-            document.getElementById('cfg-tag-ml').value = appConfig.tagMl || '';
-            document.getElementById('cfg-tag-amz').value = appConfig.tagAmz || '';
-            document.getElementById('cfg-tag-ali').value = appConfig.tagAli || '';
-        }
-
-        function addNewDealManual(event) {
-            event.preventDefault();
-            const newDeal = {
-                id: Date.now(),
-                title: document.getElementById('new-title').value,
-                store: document.getElementById('new-store').value,
-                price: parseFloat(document.getElementById('new-price').value),
-                originalPrice: parseFloat(document.getElementById('new-old-price').value),
-                discount: Math.round((1 - parseFloat(document.getElementById('new-price').value) / parseFloat(document.getElementById('new-old-price').value)) * 100),
-                score: 9.9,
-                expiryHours: 24,
-                image: document.getElementById('new-image').value,
-                url: document.getElementById('new-url').value,
-                keywords: ['manual', 'oferta']
-            };
-
-            sampleDeals.unshift(newDeal);
-            renderFeaturedDeals();
-            event.target.reset();
-            showToast('¡Oferta publicada exitosamente!', 'success');
-            switchTab('featured');
-        }
-
-        // ================= GRÁFICOS CHART.JS ================= //
-        let chartsInitialized = false;
-        function initCharts() {
-            if (chartsInitialized) return;
-            chartsInitialized = true;
-
-            const ctxTraffic = document.getElementById('chart-traffic').getContext('2d');
-            new Chart(ctxTraffic, {
-                type: 'line',
-                data: {
-                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-                    datasets: [
-                        { label: 'Mercado Libre', data: [120, 190, 150, 220, 280, 310, 350], borderColor: '#ffe600', backgroundColor: 'rgba(255, 230, 0, 0.1)', tension: 0.3 },
-                        { label: 'Amazon', data: [80, 110, 130, 170, 210, 250, 290], borderColor: '#ff9900', backgroundColor: 'rgba(255, 153, 0, 0.1)', tension: 0.3 },
-                        { label: 'AliExpress', data: [40, 60, 90, 120, 150, 180, 210], borderColor: '#ff4747', backgroundColor: 'rgba(255, 71, 71, 0.1)', tension: 0.3 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } }
-            });
-
-            const ctxPie = document.getElementById('chart-pie').getContext('2d');
-            new Chart(ctxPie, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Mercado Libre', 'Amazon', 'AliExpress'],
-                    datasets: [{ data: [45, 35, 20], backgroundColor: ['#ffe600', '#ff9900', '#ff4747'], borderWidth: 0 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } } }
-            });
-        }
-
-        // ================= NOTIFICACIONES TOAST ================= //
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-purple-600';
-            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info';
-
-            toast.className = `${bgClass} text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold transform translate-y-5 opacity-0 transition-all duration-300`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${message}</span>`;
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-5', 'opacity-0');
-            }, 50);
-
-            setTimeout(() => {
-                toast.classList.add('translate-y-5', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        function requestNotificationPermission() {
-            if ("Notification" in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        showToast('¡Notificaciones Push activadas con éxito!', 'success');
-                    } else {
-                        showToast('Permiso de notificaciones denegado', 'error');
-                    }
-                });
-            } else {
-                showToast('Tu navegador no soporta notificaciones', 'error');
-            }
-        }
-
-        function trackClick(store) {
-            console.log(`Clic registrado en plataforma: ${store}`);
+            return `
+                <div class="bg-carbon-card border border-slate-800 rounded-2xl overflow-hidden p-4 flex flex-col justify-between">
+                    <div class="relative aspect-video bg-slate-900 rounded-xl overflow-hidden mb-3">
+                        <img src="${deal.image}" alt="${deal.title}" class="w-full h-full object-cover">
+                        <div class="absolute top-2 left-2">${storeBadge}</div>
+                    </div>
+                    <h3 class="font-bold text-slate-100 text-xs line-clamp-2 mb-2">${deal.title}</h3>
+                    <div class="flex items-baseline justify-between mb-3">
+                        <span class="text-xl font-black text-white">$${deal.price}</span>
+                        <span class="text-xs text-slate-500 line-through">$${deal.originalPrice}</span>
+                        <span class="text-xs text-emerald-400 font-bold">-${deal.discount}%</span>
+                    </div>
+                    <a href="${deal.url}" target="_blank" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs rounded-xl text-center block">
+                        Ver Oferta Directa
+                    </a>
+                </div>
+            `;
         }
     </script>
 </body>
