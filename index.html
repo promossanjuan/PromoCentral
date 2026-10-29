@@ -508,7 +508,6 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
-            // Actualizar botones navegación escritorio
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-slate-400 hover:text-white flex items-center gap-2";
             });
@@ -517,7 +516,6 @@
                 activeDesktopBtn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md";
             }
 
-            // Actualizar botones navegación móvil
             document.querySelectorAll('.nav-mobile-btn').forEach(btn => {
                 btn.className = "nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium";
             });
@@ -561,7 +559,6 @@
             const storeBadgeClass = deal.store === 'mercadolibre' ? 'badge-ml' : deal.store === 'amazon' ? 'badge-amz' : 'badge-ali';
             const storeName = deal.store === 'mercadolibre' ? 'Mercado Libre' : deal.store === 'amazon' ? 'Amazon' : 'AliExpress';
 
-            // Añadir tag de afiliado al enlace si corresponde
             let finalUrl = deal.url;
             if (deal.store === 'mercadolibre' && appConfig.tagMl) {
                 finalUrl += (finalUrl.includes('?') ? '&' : '?') + `matt_tool=${appConfig.tagMl}`;
@@ -574,7 +571,7 @@
                         <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${storeBadgeClass} shadow-md">
                             ${storeName}
                         </span>
-                        <button onclick="toggleFavorite(${deal.id})" class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-carbon/80 backdrop-blur-md flex items-center justify-center text-xs text-slate-300 hover:text-rose-500 border border-slate-700/50 transition-all">
+                        <button onclick="toggleFavorite('${deal.id}')" class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-carbon/80 backdrop-blur-md flex items-center justify-center text-xs text-slate-300 hover:text-rose-500 border border-slate-700/50 transition-all">
                             <i class="fa-${isFav ? 'solid text-rose-500' : 'regular'} fa-heart"></i>
                         </button>
                         <div class="absolute bottom-3 left-3 bg-emerald-500 text-white font-black text-xs px-2.5 py-1 rounded-lg shadow-md">
@@ -620,7 +617,6 @@
             grid.innerHTML = '';
 
             try {
-                // URL por defecto de tu Supabase Edge Function o la configurada
                 const supabaseUrl = appConfig.supabaseUrl || 'https://pzyqhjelwuilcgzgxjbm.supabase.co';
                 const functionUrl = `${supabaseUrl}/functions/v1/buscadorofertas`;
 
@@ -632,11 +628,15 @@
                     },
                     body: JSON.stringify({
                         busqueda: query,
-                        tagAfiliado: appConfig.tagMl || 'default'
+                        q: query,
+                        query: query,
+                        tagAfiliado: appConfig.tagMl || 'hg20261026145647177'
                     })
                 });
 
                 const data = await response.json();
+                console.log("Respuesta obtenida de la Edge Function:", data);
+
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
 
@@ -657,12 +657,13 @@
 
                     document.getElementById('ai-result-count').innerText = `${mappedDeals.length} ofertas reales encontradas`;
                     grid.innerHTML = mappedDeals.map(d => createDealCard(d)).join('');
-                    showToast('¡Ofertas reales obtenidas de forma segura a través de Supabase!', 'success');
+                    showToast('¡Ofertas reales obtenidas exitosamente!', 'success');
                 } else {
                     document.getElementById('ai-result-count').innerText = '0 resultados';
-                    grid.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda.</div>';
+                    grid.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda. Intenta con otra palabra más simple (ej: "celular" o "smart tv").</div>';
                 }
             } catch (err) {
+                console.error("Error en petición:", err);
                 loading.classList.add('hidden');
                 container.classList.remove('hidden');
                 document.getElementById('ai-result-count').innerText = 'Error de conexión';
@@ -696,10 +697,10 @@
 
         // ================= GESTIÓN DE FAVORITOS ================= //
         function toggleFavorite(id) {
-            const deal = sampleDeals.find(d => d.id === id);
+            const deal = sampleDeals.find(d => d.id == id);
             if (!deal) return;
 
-            const index = favorites.findIndex(f => f.id === id);
+            const index = favorites.findIndex(f => f.id == id);
             if (index > -1) {
                 favorites.splice(index, 1);
                 showToast('Producto eliminado de favoritos', 'info');
