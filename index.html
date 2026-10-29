@@ -12,8 +12,16 @@
             theme: {
                 extend: {
                     colors: {
-                        carbon: { DEFAULT: '#0a0f1d', card: '#0f172a', light: '#1e293b' },
-                        accent: { purple: '#8b5cf6', purpleDark: '#7c3aed', glow: '#a855f7' }
+                        carbon: {
+                            DEFAULT: '#0a0f1d',
+                            card: '#0f172a',
+                            light: '#1e293b'
+                        },
+                        accent: {
+                            purple: '#8b5cf6',
+                            purpleDark: '#7c3aed',
+                            glow: '#a855f7'
+                        }
                     }
                 }
             }
@@ -24,19 +32,37 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0f1d; color: #f8fafc; }
-        .glow-purple { box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.3); }
-        .glow-purple-hover:hover { box-shadow: 0 0 30px 2px rgba(168, 85, 247, 0.45); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f1d;
+            color: #f8fafc;
+        }
+        .glow-purple {
+            box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.3);
+        }
+        .glow-purple-hover:hover {
+            box-shadow: 0 0 30px 2px rgba(168, 85, 247, 0.45);
+        }
         .badge-ml { background-color: #ffe600; color: #2d3277; }
         .badge-amz { background-color: #ff9900; color: #111; }
         .badge-ali { background-color: #ff4747; color: #fff; }
+        
         /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0f1d; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0f1d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased selection:bg-purple-500 selection:text-white">
@@ -50,7 +76,7 @@
             <!-- LOGO -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('featured')">
                 <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-purple-400 flex items-center justify-center text-white text-xl shadow-lg shadow-purple-500/30">
-                    <i class="fa-solid fa-bolt-lightning"></i>
+                    <i class="fa-solid font-bolt fa-bolt-lightning"></i>
                 </div>
                 <div>
                     <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-purple-400 bg-clip-text text-transparent">PromoCentral</span>
@@ -85,19 +111,23 @@
         <!-- BARRA NAVEGACIÓN MÓVIL -->
         <div class="md:hidden flex border-t border-slate-800/80 bg-carbon-card px-2 py-2 justify-around">
             <button id="nav-mobile-featured" onclick="switchTab('featured')" class="nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-purple-400 text-xs font-medium">
-                <i class="fa-solid fa-fire text-base mb-1"></i> Ofertas
+                <i class="fa-solid fa-fire text-base mb-1"></i>
+                Ofertas
             </button>
             <button id="nav-mobile-ai-search" onclick="switchTab('ai-search')" class="nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium">
-                <i class="fa-solid fa-robot text-base mb-1"></i> Buscador IA
+                <i class="fa-solid fa-robot text-base mb-1"></i>
+                Buscador IA
             </button>
             <button id="nav-mobile-favorites" onclick="switchTab('favorites')" class="nav-mobile-btn flex flex-col items-center py-1 px-3 rounded-lg text-slate-400 text-xs font-medium relative">
-                <i class="fa-solid fa-heart text-base mb-1"></i> Favoritos
+                <i class="fa-solid fa-heart text-base mb-1"></i>
+                Favoritos
             </button>
         </div>
     </header>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
         <!-- ================= PESTAÑA 1: OFERTAS DESTACADAS ================= -->
         <section id="tab-featured" class="tab-content space-y-8">
             <!-- BANNER PRINCIPAL -->
@@ -118,7 +148,7 @@
                             <i class="fa-solid fa-check text-emerald-400"></i> Links Directos Verificados
                         </span>
                         <span class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/50">
-                            <i class="fa-solid fa-sync text-purple-400"></i> Actualización cada 15 min
+                            <i class="fa-solid fa-sync text-purple-400"></i> Actualización en vivo
                         </span>
                     </div>
                 </div>
@@ -143,7 +173,9 @@
             </div>
 
             <!-- GRILLA DE PRODUCTOS -->
-            <div id="featured-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            <div id="featured-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Se llena mediante Javascript -->
+            </div>
         </section>
 
         <!-- ================= PESTAÑA 2: BUSCADOR INTELIGENTE IA ================= -->
@@ -151,15 +183,15 @@
             <div class="bg-carbon-card border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
                 <div class="max-w-3xl mx-auto text-center space-y-4">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30">
-                        <i class="fa-solid fa-brain"></i> Motor Supabase Edge Function AI
+                        <i class="fa-solid fa-brain"></i> Motor de Búsqueda Inteligente en Vivo
                     </div>
                     <h2 class="text-2xl sm:text-4xl font-extrabold text-white">¿Qué estás buscando exactamente?</h2>
                     <p class="text-slate-400 text-sm">
-                        Escribe lo que buscas. Consultaremos en vivo las ofertas reales mediante Supabase y la API de Mercado Libre.
+                        Escribe lo que buscas. Consultaremos en tiempo real las ofertas y productos oficiales de Mercado Libre.
                     </p>
 
                     <!-- BUSCADOR INPUT -->
-                    <form onsubmit="handleAlSearch(event)" class="mt-6 relative">
+                    <form onsubmit="handleAISearch(event)" class="mt-6 relative">
                         <div class="relative flex items-center">
                             <input type="text" id="ai-input" placeholder="Ej: Smartphone, Notebook, Auriculares..." class="w-full pl-5 pr-36 py-4 rounded-2xl bg-slate-900/90 border-2 border-purple-500/40 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-purple-500 transition-all shadow-inner">
                             <button type="submit" class="absolute right-2 top-2 bottom-2 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20">
@@ -172,9 +204,9 @@
                     <!-- SUGERENCIAS RÁPIDAS -->
                     <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs">
                         <span class="text-slate-500">Sugerencias:</span>
-                        <button onclick="setAlSearch('Notebook')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">Notebook</button>
-                        <button onclick="setAlSearch('Auriculares inalambricos')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">Auriculares</button>
-                        <button onclick="setAlSearch('Smart TV')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">Smart TV</button>
+                        <button type="button" onclick="setAISearch('Notebook')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">💻 Notebook</button>
+                        <button type="button" onclick="setAISearch('Auriculares inalambricos')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">🎧 Auriculares</button>
+                        <button type="button" onclick="setAISearch('Smart TV')" class="bg-slate-800/60 hover:bg-purple-900/40 border border-slate-700/60 text-slate-300 px-3 py-1 rounded-lg transition-all">📺 Smart TV</button>
                     </div>
                 </div>
             </div>
@@ -184,7 +216,7 @@
                 <div class="inline-block p-4 bg-purple-500/10 rounded-full border border-purple-500/30 animate-pulse">
                     <i class="fa-solid fa-robot text-4xl text-purple-400 animate-spin"></i>
                 </div>
-                <p class="text-purple-300 font-medium text-sm">Consultando ofertas reales en vivo desde Supabase...</p>
+                <p class="text-purple-300 font-medium text-sm">Buscando ofertas reales en vivo...</p>
             </div>
 
             <!-- RESULTADOS DE BÚSQUEDA IA -->
@@ -198,14 +230,16 @@
                 <div id="ai-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
             </div>
 
-            <!-- ÚLTIMAS BÚSQUEDAS Y NOTIFICACIONES -->
+            <!-- ÚLTIMAS BÚSQUEDAS Y NOTIFICACIONES PUSH SIMULADAS -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
                 <!-- Historial -->
                 <div class="md:col-span-2 bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
                     <h3 class="text-base font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Tus Últimas Búsquedas Relacionadas
                     </h3>
-                    <div id="recent-searches-list" class="flex flex-wrap gap-2"></div>
+                    <div id="recent-searches-list" class="flex flex-wrap gap-2">
+                        <!-- Llenado dinámico -->
+                    </div>
                 </div>
 
                 <!-- Notificaciones Simuladas -->
@@ -241,7 +275,9 @@
             </div>
 
             <!-- GRILLA FAVORITOS -->
-            <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Llenado dinámico -->
+            </div>
 
             <!-- EMPTY STATE -->
             <div id="favorites-empty" class="hidden text-center py-16 bg-carbon-card border border-slate-800 rounded-2xl space-y-4">
@@ -267,7 +303,7 @@
                 </button>
             </div>
 
-            <!-- DASHBOARD DE STATS -->
+            <!-- DASHBOARD DE GRÁFICOS / TRÁFICO -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
                     <p class="text-xs text-slate-400 font-medium">Clics Totales</p>
@@ -283,7 +319,7 @@
                 </div>
                 <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
                     <p class="text-xs text-slate-400 font-medium">Comisión Est. Amazon</p>
-                    <p class="text-3xl font-black text-amber-400 mt-1">$185.20</p>
+                    <p class="text-3xl font-black text-orange-400 mt-1">$185.20</p>
                     <span class="text-[10px] text-slate-400 mt-2 block">Tag configurado</span>
                 </div>
                 <div class="bg-carbon-card p-5 rounded-2xl border border-slate-800">
@@ -299,25 +335,30 @@
                     <h3 class="text-sm font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-chart-line text-purple-400"></i> Clics Diarios por Plataforma
                     </h3>
-                    <div class="h-64"><canvas id="chart-traffic"></canvas></div>
+                    <div class="h-64">
+                        <canvas id="chart-traffic"></canvas>
+                    </div>
                 </div>
                 <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-chart-pie text-purple-400"></i> Distribución de Tráfico
                     </h3>
-                    <div class="h-64 flex justify-center"><canvas id="chart-pie"></canvas></div>
+                    <div class="h-64 flex justify-center">
+                        <canvas id="chart-pie"></canvas>
+                    </div>
                 </div>
             </div>
 
-            <!-- CONFIGURACIÓN SUPABASE & TAGS -->
+            <!-- CONFIGURACIÓN API SUPABASE Y TAGS -->
             <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-6">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-sliders text-purple-400"></i> Configuración de Integración & Tags
                 </h3>
+                
                 <form onsubmit="saveAdminSettings(event)" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Supabase URL Base (sin /rest/v1/)</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Supabase URL</label>
                             <input type="text" id="cfg-supabase-url" placeholder="https://tu-proyecto.supabase.co" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                         <div>
@@ -325,27 +366,24 @@
                             <input type="password" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1Ni..." class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                     </div>
+
                     <hr class="border-slate-800 my-4">
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">
-                                <i class="fa-solid fa-store text-yellow-400"></i> Tag Afiliado Mercado Libre
-                            </label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-store text-yellow-400"></i> Tag Afiliado Mercado Libre</label>
                             <input type="text" id="cfg-tag-ml" placeholder="ml_afiliado_tag" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">
-                                <i class="fa-brands fa-amazon text-amber-400"></i> Tag Afiliado Amazon
-                            </label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-brands fa-amazon text-amber-400"></i> Tag Afiliado Amazon</label>
                             <input type="text" id="cfg-tag-amz" placeholder="amazon_tag-20" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">
-                                <i class="fa-solid fa-bag-shopping text-rose-400"></i> Tag Afiliado AliExpress
-                            </label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-bag-shopping text-rose-400"></i> Tag Afiliado AliExpress</label>
                             <input type="text" id="cfg-tag-ali" placeholder="ali_affiliate_id" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                     </div>
+
                     <div class="flex justify-end pt-2">
                         <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
                             <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
@@ -354,7 +392,7 @@
                 </form>
             </div>
 
-            <!-- PUBLICAR OFERTA MANUALMENTE -->
+            <!-- AÑADIR NUEVA OFERTA MANUALLY -->
             <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-4">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-plus-circle text-purple-400"></i> Publicar Nueva Oferta Manualmente
@@ -370,12 +408,14 @@
                     <input type="number" id="new-old-price" placeholder="Precio Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="url" id="new-image" placeholder="URL Imagen" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="url" id="new-url" placeholder="URL Producto Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                    
                     <button type="submit" class="md:col-span-3 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">
                         <i class="fa-solid fa-upload"></i> Publicar Oferta en la Web
                     </button>
                 </form>
             </div>
         </section>
+
     </main>
 
     <!-- FOOTER -->
@@ -399,6 +439,7 @@
                 <h3 class="text-xl font-bold text-white">Acceso Administrador</h3>
                 <p class="text-xs text-slate-400">Ingresa la contraseña para acceder al panel de control.</p>
             </div>
+
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <input type="password" id="admin-pass" placeholder="Contraseña (por defecto: admin123)" class="w-full px-4 py-3 rounded-xl bg-carbon-light border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
@@ -410,24 +451,96 @@
         </div>
     </div>
 
-    <!-- LÓGICA JAVASCRIPT INTEGRADA -->
+    <!-- LOGICA JAVASCRIPT INTEGRADA -->
     <script>
         // DATOS MOCK INICIALES DE OFERTAS
         const sampleDeals = [
-            { id: 1, title: "Smartphone Samsung Galaxy S23 256GB Ultra HD", store: "mercadolibre", price: 649, originalPrice: 899, discount: 28, score: 9.8, expiryHours: 12, image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80", url: "https://mercadolibre.com", keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"] },
-            { id: 2, title: "Auriculares Sony WH-1000XM5 Cancelación Ruido", store: "amazon", price: 298, originalPrice: 399, discount: 25, score: 9.5, expiryHours: 8, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80", url: "https://amazon.com", keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"] },
-            { id: 3, title: "Consola Nintendo Switch OLED Edition 64GB", store: "aliexpress", price: 270, originalPrice: 350, discount: 22, score: 9.2, expiryHours: 24, image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=500&q=80", url: "https://aliexpress.com", keywords: ["consola", "nintendo", "switch", "juegos", "gamer"] },
-            { id: 4, title: "Apple MacBook Air M2 8GB RAM 256GB SSD", store: "amazon", price: 999, originalPrice: 1199, discount: 17, score: 9.7, expiryHours: 5, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80", url: "https://amazon.com", keywords: ["laptop", "macbook", "apple", "notebook", "ordenador"] },
-            { id: 5, title: "Smart Watch Xiaomi Watch S1 Active GPS", store: "aliexpress", price: 85, originalPrice: 140, discount: 39, score: 8.9, expiryHours: 48, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80", url: "https://aliexpress.com", keywords: ["smartwatch", "reloj", "xiaomi", "deporte", "fitness"] },
-            { id: 6, title: "Teclado Mecánico Wireless Keychron K2 RGB", store: "mercadolibre", price: 79, originalPrice: 110, discount: 28, score: 9.1, expiryHours: 18, image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80", url: "https://mercadolibre.com", keywords: ["teclado", "keychron", "mecanico", "gamer", "pc"] }
+            {
+                id: 1,
+                title: "Smartphone Samsung Galaxy S23 256GB Ultra HD",
+                store: "mercadolibre",
+                price: 649,
+                originalPrice: 899,
+                discount: 28,
+                score: 9.8,
+                expiryHours: 12,
+                image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80",
+                url: "https://mercadolibre.com",
+                keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"]
+            },
+            {
+                id: 2,
+                title: "Auriculares Sony WH-1000XM5 Cancelación Ruido",
+                store: "amazon",
+                price: 298,
+                originalPrice: 399,
+                discount: 25,
+                score: 9.5,
+                expiryHours: 8,
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
+                url: "https://amazon.com",
+                keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"]
+            },
+            {
+                id: 3,
+                title: "Consola Nintendo Switch OLED Edition 64GB",
+                store: "aliexpress",
+                price: 270,
+                originalPrice: 350,
+                discount: 22,
+                score: 9.2,
+                expiryHours: 24,
+                image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=500&q=80",
+                url: "https://aliexpress.com",
+                keywords: ["consola", "nintendo", "switch", "juegos", "gamer"]
+            },
+            {
+                id: 4,
+                title: "Apple MacBook Air M2 8GB RAM 256GB SSD",
+                store: "amazon",
+                price: 999,
+                originalPrice: 1199,
+                discount: 17,
+                score: 9.7,
+                expiryHours: 5,
+                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80",
+                url: "https://amazon.com",
+                keywords: ["laptop", "macbook", "apple", "notebook", "ordenador"]
+            },
+            {
+                id: 5,
+                title: "Smart Watch Xiaomi Watch S1 Active GPS",
+                store: "aliexpress",
+                price: 85,
+                originalPrice: 140,
+                discount: 39,
+                score: 8.9,
+                expiryHours: 48,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80",
+                url: "https://aliexpress.com",
+                keywords: ["smartwatch", "reloj", "xiaomi", "deporte", "fitness"]
+            },
+            {
+                id: 6,
+                title: "Teclado Mecánico Wireless Keychron K2 RGB",
+                store: "mercadolibre",
+                price: 79,
+                originalPrice: 110,
+                discount: 28,
+                score: 9.1,
+                expiryHours: 18,
+                image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80",
+                url: "https://mercadolibre.com",
+                keywords: ["teclado", "keychron", "mecanico", "gamer", "pc"]
+            }
         ];
 
-        // CONFIGURACIÓN GLOBAL/LOCALSTORAGE
+        // CONFIGURACIÓN GLOBAL / LOCALSTORAGE
         let dealsList = JSON.parse(localStorage.getItem('promo_deals')) || sampleDeals;
         let favoriteIds = JSON.parse(localStorage.getItem('promo_favs')) || [1, 2];
         let recentSearches = JSON.parse(localStorage.getItem('promo_searches')) || ["Notebook Gamer", "Auriculares Inalámbricos", "Samsung S23"];
         let adminConfig = JSON.parse(localStorage.getItem('promo_admin_cfg')) || {
-            supabaseUrl: 'https://pzqyhjelwuilcgzgxjbm.supabase.co',
+            supabaseUrl: '',
             supabaseKey: '',
             tagML: 'promocentral-20',
             tagAMZ: 'promocentral-21',
@@ -447,10 +560,10 @@
             loadAdminConfigFields();
         });
 
-        // CAMBIO DE PESTAÑAS
+        // CAMBIO DE PESTAÑAS (Resuelve el error switchTab is not defined)
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-
+            
             // Botones escritorio
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-slate-400 hover:text-white flex items-center gap-2";
@@ -471,7 +584,7 @@
             }
 
             const activeMobileBtn = document.getElementById(`nav-mobile-${tabId}`);
-            if (activeMobileBtn) {
+            if(activeMobileBtn) {
                 activeMobileBtn.classList.remove('text-slate-400');
                 activeMobileBtn.classList.add('text-purple-400');
             }
@@ -481,10 +594,10 @@
             }
         }
 
-        // GENERADOR DE CARDS DE PRODUCTO
+        // GENERADOR DE CARDS
         function createDealCard(deal, isFavTab = false) {
             const isFav = favoriteIds.includes(deal.id);
-
+            
             let storeBadge = '';
             let storeTag = '';
             if(deal.store === 'mercadolibre') {
@@ -498,9 +611,13 @@
                 storeTag = adminConfig.tagALI;
             }
 
-            const affiliateLink = deal.url.includes('ref=') ? deal.url : `${deal.url}?tag=${storeTag}&ref=promocentral`;
+            const affiliateLink = deal.url.includes('matt_tool') || deal.url.includes('tag=') ? deal.url : `${deal.url}?tag=${storeTag}&ref=promocentral`;
             const isExpired = deal.expiryHours <= 0;
-            const statusBadge = isFavTab ? (isExpired ? `<span class="text-[10px] bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-xmark"></i> Oferta Expirada</span>` : `<span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check"></i> Promoción Vigente</span>`) : '';
+            const statusBadge = isFavTab ? (
+                isExpired ? 
+                `<span class="text-[10px] bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-xmark"></i> Oferta Expirada</span>` :
+                `<span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check"></i> Promoción Vigente</span>`
+            ) : '';
 
             return `
                 <div class="bg-carbon-card border border-slate-800 hover:border-purple-500/50 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 flex flex-col justify-between group glow-purple-hover">
@@ -513,14 +630,16 @@
                             <i class="${isFav ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
                         </button>
                         <div class="absolute bottom-3 left-3 bg-purple-950/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-300 border border-purple-500/30">
-                            Puntuación: ${deal.score}/10
+                            ⭐ Puntuación: ${deal.score}/10
                         </div>
                     </div>
+
                     <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
                         <div>
                             ${statusBadge ? `<div class="mb-2">${statusBadge}</div>` : ''}
                             <h3 class="font-bold text-slate-100 text-sm line-clamp-2 leading-snug group-hover:text-purple-300 transition-colors">${deal.title}</h3>
                         </div>
+
                         <div class="space-y-3 pt-2 border-t border-slate-800/80">
                             <div class="flex items-baseline justify-between">
                                 <div>
@@ -531,16 +650,18 @@
                                     -${deal.discount}% OFF
                                 </span>
                             </div>
+
                             <a href="${affiliateLink}" target="_blank" onclick="trackClick('${deal.store}')" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
                                 <span>Ver Oferta Directa</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                             </a>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            `;
         }
 
-        // RENDERIZAR OFERTAS DESTACADAS
+        // RENDEREAR OFERTAS DESTACADAS
         function renderFeaturedDeals() {
             const grid = document.getElementById('featured-deals-grid');
             const sortVal = document.getElementById('sort-select').value;
@@ -566,133 +687,85 @@
             event.target.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white border border-purple-500";
             renderFeaturedDeals();
         }
-// BUSCADOR INTELIGENTE CON CONEXIÓN DIRECTA A MERCADO LIBRE
-async function handleAIsearch(e) {
-  e.preventDefault();
-  const query = document.getElementById('ai-input').value.trim();
-  if(!query) return;
 
-  // Mostrar estado de carga y ocultar resultados anteriores
-  document.getElementById('ai-loading').classList.remove('hidden');
-  document.getElementById('ai-results-container').classList.add('hidden');
+        // BUSCADOR INTELIGENTE CON CONEXIÓN DIRECTA A MERCADO LIBRE
+        async function handleAISearch(e) {
+            if (e && typeof e.preventDefault === 'function') e.preventDefault();
+            const inputEl = document.getElementById('ai-input');
+            const query = inputEl ? inputEl.value.trim() : '';
+            if(!query) return;
 
-  // Guardar en búsquedas recientes
-  if(!recentSearches.includes(query)) {
-    recentSearches.unshift(query);
-    if(recentSearches.length > 5) recentSearches.pop();
-    localStorage.setItem('promo_searches', JSON.stringify(recentSearches));
-    renderRecentSearches();
-  }
+            const loadingEl = document.getElementById('ai-loading');
+            const resultsEl = document.getElementById('ai-results-container');
 
-  const tagAfiliado = 'promocentral';
+            if(loadingEl) loadingEl.classList.remove('hidden');
+            if(resultsEl) resultsEl.classList.add('hidden');
 
-  try {
-    // Petición directa al navegador para evitar bloqueos 403 de servidores
-    const url = https://api.mercadolibre.com/sites/MLA/search?q=${encodeURIComponent(query)}&limit=12;
-    const response = await fetch(url);
-    const data = await response.json();
+            if(!recentSearches.includes(query)) {
+                recentSearches.unshift(query);
+                if(recentSearches.length > 5) recentSearches.pop();
+                localStorage.setItem('promo_searches', JSON.stringify(recentSearches));
+                renderRecentSearches();
+            }
 
-    const ofertas = (data.results || []).map(item => ({
-      id: item.id,
-      titulo: item.title,
-      precio: item.price,
-      imagen: item.thumbnail ? item.thumbnail.replace('http://', 'https://') : '',
-      enlace: ${item.permalink}?matt_tool=${tagAfiliado},
-      plataforma: 'Mercado Libre'
-    }));
-
-    // Ocultar carga y mostrar contenedor de resultados
-    document.getElementById('ai-loading').classList.add('hidden');
-    document.getElementById('ai-results-container').classList.remove('hidden');
-
-    // Si tienes una función en tu código que dibuja las ofertas, la llamamos aquí:
-    if (typeof renderizarOfertas === 'function') {
-      renderizarOfertas(ofertas);
-    } else {
-      console.log("Ofertas obtenidas con éxito:", ofertas);
-    }
-
-  } catch (error) {
-    console.error('Error al obtener productos:', error);
-    document.getElementById('ai-loading').classList.add('hidden');
-    document.getElementById('ai-results-container').classList.remove('hidden');
-  }
-}
-       
-
-            // Sanitización limpia de la URL de Supabase (sin prefijos REST extras ni barras finales)
-            let rawUrl = adminConfig.supabaseUrl || localStorage.getItem('promo_sb_url') || 'https://pzqyhjelwuilcgzgxjbm.supabase.co';
-            let sbUrl = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
-            const sbKey = adminConfig.supabaseKey || localStorage.getItem('promo_sb_key') || '';
-            const tagML = adminConfig.tagML || 'TU_TAG';
+            const tagAfiliado = adminConfig.tagML || 'promocentral';
 
             try {
-                const headers = { 'Content-Type': 'application/json' };
-                if (sbKey) {
-                    headers['apikey'] = sbKey;
-                    headers['Authorization'] = `Bearer ${sbKey}`;
-                }
-
-                // Endpoint directo a la Edge Function
-                const endpointUrl = `${sbUrl}/functions/v1/buscadorofertas`;
-
-                const response = await fetch(endpointUrl, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify({ busqueda: query, tienda: 'Mercado Libre', tagAfiliado: tagML })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error en respuesta HTTP: status ${response.status}`);
-                }
-
+                const url = `https://api.mercadolibre.com/sites/MLA/search?q=${encodeURIComponent(query)}&limit=12`;
+                const response = await fetch(url);
                 const data = await response.json();
-                console.log("Respuesta recibida de Supabase:", data);
 
-                document.getElementById('ai-loading').classList.add('hidden');
-                document.getElementById('ai-results-container').classList.remove('hidden');
+                if(loadingEl) loadingEl.classList.add('hidden');
+                if(resultsEl) resultsEl.classList.remove('hidden');
 
-                // Compatibilidad flexible de arreglo devuelto
-                const listaOfertas = data.ofertas || data.results || data.data || [];
-
-                if (listaOfertas.length > 0) {
-                    const mappedDeals = listaOfertas.map((item, index) => ({
-                        id: 9000 + index,
-                        title: item.titulo || item.title || item.name || "Producto de Oferta",
-                        store: 'mercadolibre',
-                        price: item.precio_oferta || item.price || item.precio || 0,
-                        originalPrice: item.precio_original || item.original_price || item.precio_oferta || 0,
-                        discount: item.descuento || item.discount || 0,
-                        score: item.puntuacion || item.score || 4.8,
-                        expiryHours: 24,
-                        image: item.imagen_url || item.image || item.thumbnail || "https://placehold.co/600x400/0f172a/8b5cf6?text=PromoCentral",
-                        url: item.link_afiliado || item.url || item.permalink || "#",
-                        keywords: query.toLowerCase().split(' ')
-                    }));
+                const results = data.results || [];
+                if (results.length > 0) {
+                    const mappedDeals = results.map((item, index) => {
+                        const originalPrice = item.original_price || (item.price * 1.25);
+                        const discount = item.original_price ? Math.round((1 - (item.price / item.original_price)) * 100) : 20;
+                        return {
+                            id: 9000 + index,
+                            title: item.title,
+                            store: 'mercadolibre',
+                            price: item.price,
+                            originalPrice: Math.round(originalPrice),
+                            discount: discount > 0 ? discount : 15,
+                            score: 9.4,
+                            expiryHours: 24,
+                            image: item.thumbnail ? item.thumbnail.replace('http://', 'https://') : '',
+                            url: `${item.permalink}?matt_tool=${tagAfiliado}`,
+                            keywords: query.toLowerCase().split(' ')
+                        };
+                    });
 
                     document.getElementById('ai-result-count').innerText = `${mappedDeals.length} ofertas reales encontradas`;
                     document.getElementById('ai-deals-grid').innerHTML = mappedDeals.map(d => createDealCard(d)).join('');
-                    showToast('¡Ofertas reales obtenidas desde Supabase!', 'success');
+                    showToast('¡Búsqueda completada con éxito!', 'success');
                 } else {
                     document.getElementById('ai-result-count').innerText = '0 resultados';
-                    document.getElementById('ai-deals-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda.</div>';
+                    document.getElementById('ai-deals-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos para esta búsqueda. Prueba con otro término.</div>';
                 }
             } catch (error) {
-                console.error('Error Edge Function:', error);
-                document.getElementById('ai-loading').classList.add('hidden');
-                document.getElementById('ai-results-container').classList.remove('hidden');
-                showToast('Error al conectar con la Edge Function de Supabase', 'error');
+                console.error('Error al buscar:', error);
+                if(loadingEl) loadingEl.classList.add('hidden');
+                if(resultsEl) resultsEl.classList.remove('hidden');
+                showToast('Error al conectar con la API de Mercado Libre', 'error');
             }
         }
 
-        function setAlSearch(text) {
+        function setAISearch(text) {
             document.getElementById('ai-input').value = text;
-            handleAlSearch(new Event('submit'));
+            handleAISearch(new Event('submit'));
         }
 
         function renderRecentSearches() {
             const container = document.getElementById('recent-searches-list');
-            container.innerHTML = recentSearches.map(s => `<button onclick="setAlSearch('${s}')" class="bg-slate-900 hover:bg-purple-900/30 border border-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5"><i class="fa-solid fa-magnifying-glass text-[10px] text-purple-400"></i> ${s}</button>`).join('');
+            if(!container) return;
+            container.innerHTML = recentSearches.map(s => `
+                <button type="button" onclick="setAISearch('${s}')" class="bg-slate-900 hover:bg-purple-900/30 border border-slate-800 text-slate-300 text-xs px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-magnifying-glass text-[10px] text-purple-400"></i> ${s}
+                </button>
+            `).join('');
         }
 
         // FAVORITOS Y VIGENCIA
@@ -713,6 +786,7 @@ async function handleAIsearch(e) {
 
         function updateFavBadge() {
             const badge = document.getElementById('fav-badge');
+            if(!badge) return;
             if(favoriteIds.length > 0) {
                 badge.innerText = favoriteIds.length;
                 badge.classList.remove('hidden');
@@ -724,6 +798,8 @@ async function handleAIsearch(e) {
         function renderFavorites() {
             const grid = document.getElementById('favorites-grid');
             const emptyState = document.getElementById('favorites-empty');
+            if(!grid || !emptyState) return;
+
             const favDeals = dealsList.filter(d => favoriteIds.includes(d.id));
 
             if(favDeals.length === 0) {
@@ -745,8 +821,13 @@ async function handleAIsearch(e) {
         }
 
         // MODAL Y LOGIN ADMIN
-        function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
-        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
 
         function handleAdminLogin(e) {
             e.preventDefault();
@@ -767,18 +848,22 @@ async function handleAIsearch(e) {
 
         // CONFIGURACIONES DE ADMIN
         function loadAdminConfigFields() {
-            document.getElementById('cfg-supabase-url').value = adminConfig.supabaseUrl || '';
-            document.getElementById('cfg-supabase-key').value = adminConfig.supabaseKey || '';
-            document.getElementById('cfg-tag-ml').value = adminConfig.tagML || '';
-            document.getElementById('cfg-tag-amz').value = adminConfig.tagAMZ || '';
-            document.getElementById('cfg-tag-ali').value = adminConfig.tagALI || '';
+            const uUrl = document.getElementById('cfg-supabase-url');
+            const uKey = document.getElementById('cfg-supabase-key');
+            const tMl = document.getElementById('cfg-tag-ml');
+            const tAmz = document.getElementById('cfg-tag-amz');
+            const tAli = document.getElementById('cfg-tag-ali');
+
+            if(uUrl) uUrl.value = adminConfig.supabaseUrl || '';
+            if(uKey) uKey.value = adminConfig.supabaseKey || '';
+            if(tMl) tMl.value = adminConfig.tagML || '';
+            if(tAmz) tAmz.value = adminConfig.tagAMZ || '';
+            if(tAli) tAli.value = adminConfig.tagALI || '';
         }
 
         function saveAdminSettings(e) {
             e.preventDefault();
-            let rawUrl = document.getElementById('cfg-supabase-url').value.trim();
-            // Sanitizamos automáticamente si el usuario ingresó /rest/v1/
-            adminConfig.supabaseUrl = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
+            adminConfig.supabaseUrl = document.getElementById('cfg-supabase-url').value.trim();
             adminConfig.supabaseKey = document.getElementById('cfg-supabase-key').value.trim();
             adminConfig.tagML = document.getElementById('cfg-tag-ml').value.trim();
             adminConfig.tagAMZ = document.getElementById('cfg-tag-amz').value.trim();
@@ -791,16 +876,13 @@ async function handleAIsearch(e) {
 
         function addNewDealManual(e) {
             e.preventDefault();
-            const price = parseFloat(document.getElementById('new-price').value);
-            const oldPrice = parseFloat(document.getElementById('new-old-price').value);
-
             const newDeal = {
                 id: Date.now(),
                 title: document.getElementById('new-title').value,
                 store: document.getElementById('new-store').value,
-                price: price,
-                originalPrice: oldPrice,
-                discount: Math.round((1 - (price / oldPrice)) * 100),
+                price: parseFloat(document.getElementById('new-price').value),
+                originalPrice: parseFloat(document.getElementById('new-old-price').value),
+                discount: Math.round((1 - (document.getElementById('new-price').value / document.getElementById('new-old-price').value)) * 100),
                 score: 9.0,
                 expiryHours: 24,
                 image: document.getElementById('new-image').value,
@@ -828,6 +910,7 @@ async function handleAIsearch(e) {
         function initAdminCharts() {
             const ctxTraffic = document.getElementById('chart-traffic');
             const ctxPie = document.getElementById('chart-pie');
+
             if(!ctxTraffic || !ctxPie) return;
 
             if(trafficChartInstance) trafficChartInstance.destroy();
@@ -838,9 +921,24 @@ async function handleAIsearch(e) {
                 data: {
                     labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
                     datasets: [
-                        { label: 'Mercado Libre', data: [120, 190, 170, 220, 300, 280, 350], borderColor: '#ffe600', tension: 0.3 },
-                        { label: 'Amazon', data: [90, 140, 130, 180, 210, 190, 240], borderColor: '#ff9900', tension: 0.3 },
-                        { label: 'AliExpress', data: [50, 70, 60, 90, 120, 110, 130], borderColor: '#ff4747', tension: 0.3 }
+                        {
+                            label: 'Mercado Libre',
+                            data: [120, 190, 170, 220, 300, 280, 350],
+                            borderColor: '#ffe600',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Amazon',
+                            data: [90, 140, 130, 180, 210, 190, 240],
+                            borderColor: '#ff9900',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'AliExpress',
+                            data: [50, 70, 60, 90, 120, 110, 130],
+                            borderColor: '#ff4747',
+                            tension: 0.3
+                        }
                     ]
                 },
                 options: {
@@ -858,7 +956,10 @@ async function handleAIsearch(e) {
                 type: 'doughnut',
                 data: {
                     labels: ['Mercado Libre', 'Amazon', 'AliExpress'],
-                    datasets: [{ data: [50, 32, 18], backgroundColor: ['#ffe600', '#ff9900', '#ff4747'] }]
+                    datasets: [{
+                        data: [50, 32, 18],
+                        backgroundColor: ['#ffe600', '#ff9900', '#ff4747']
+                    }]
                 },
                 options: {
                     responsive: true,
@@ -871,16 +972,22 @@ async function handleAIsearch(e) {
         // TOAST NOTIFICATIONS
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toast-container');
+            if(!container) return;
             const toast = document.createElement('div');
+            
             let colorClass = 'bg-slate-800 border-slate-700 text-white';
             if(type === 'success') colorClass = 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200';
             if(type === 'error') colorClass = 'bg-rose-950/90 border-rose-500/50 text-rose-200';
 
             toast.className = `px-4 py-3 rounded-xl border ${colorClass} text-xs font-semibold shadow-xl backdrop-blur-md transition-all flex items-center gap-2 transform translate-y-2 opacity-0`;
             toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
+
             container.appendChild(toast);
 
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
             setTimeout(() => {
                 toast.classList.add('opacity-0');
                 setTimeout(() => toast.remove(), 300);
