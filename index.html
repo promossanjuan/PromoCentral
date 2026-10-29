@@ -566,22 +566,59 @@
             event.target.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 text-white border border-purple-500";
             renderFeaturedDeals();
         }
+// BUSCADOR INTELIGENTE CON CONEXIÓN DIRECTA A MERCADO LIBRE
+async function handleAIsearch(e) {
+  e.preventDefault();
+  const query = document.getElementById('ai-input').value.trim();
+  if(!query) return;
 
-        // BUSCADOR INTELIGENTE CON CONEXIÓN CORREGIDA A SUPABASE
-        async function handleAlSearch(e) {
-            e.preventDefault();
-            const query = document.getElementById('ai-input').value.trim();
-            if(!query) return;
+  // Mostrar estado de carga y ocultar resultados anteriores
+  document.getElementById('ai-loading').classList.remove('hidden');
+  document.getElementById('ai-results-container').classList.add('hidden');
 
-            document.getElementById('ai-loading').classList.remove('hidden');
-            document.getElementById('ai-results-container').classList.add('hidden');
+  // Guardar en búsquedas recientes
+  if(!recentSearches.includes(query)) {
+    recentSearches.unshift(query);
+    if(recentSearches.length > 5) recentSearches.pop();
+    localStorage.setItem('promo_searches', JSON.stringify(recentSearches));
+    renderRecentSearches();
+  }
 
-            if(!recentSearches.includes(query)) {
-                recentSearches.unshift(query);
-                if(recentSearches.length > 5) recentSearches.pop();
-                localStorage.setItem('promo_searches', JSON.stringify(recentSearches));
-                renderRecentSearches();
-            }
+  const tagAfiliado = 'promocentral';
+
+  try {
+    // Petición directa al navegador para evitar bloqueos 403 de servidores
+    const url = https://api.mercadolibre.com/sites/MLA/search?q=${encodeURIComponent(query)}&limit=12;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const ofertas = (data.results || []).map(item => ({
+      id: item.id,
+      titulo: item.title,
+      precio: item.price,
+      imagen: item.thumbnail ? item.thumbnail.replace('http://', 'https://') : '',
+      enlace: ${item.permalink}?matt_tool=${tagAfiliado},
+      plataforma: 'Mercado Libre'
+    }));
+
+    // Ocultar carga y mostrar contenedor de resultados
+    document.getElementById('ai-loading').classList.add('hidden');
+    document.getElementById('ai-results-container').classList.remove('hidden');
+
+    // Si tienes una función en tu código que dibuja las ofertas, la llamamos aquí:
+    if (typeof renderizarOfertas === 'function') {
+      renderizarOfertas(ofertas);
+    } else {
+      console.log("Ofertas obtenidas con éxito:", ofertas);
+    }
+
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+    document.getElementById('ai-loading').classList.add('hidden');
+    document.getElementById('ai-results-container').classList.remove('hidden');
+  }
+}
+       
 
             // Sanitización limpia de la URL de Supabase (sin prefijos REST extras ni barras finales)
             let rawUrl = adminConfig.supabaseUrl || localStorage.getItem('promo_sb_url') || 'https://pzqyhjelwuilcgzgxjbm.supabase.co';
