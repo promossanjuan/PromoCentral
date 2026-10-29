@@ -394,7 +394,7 @@
                     <input type="number" id="new-price" placeholder="Precio Final (USD)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="number" id="new-old-price" placeholder="Precio Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="url" id="new-image" placeholder="URL Imagen" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <input type="url" id="new-url" placeholder="URL Producto Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <input type="url" id="new-url" placeholder="URL Producto Original (Ej: https://.../dp/ASIN)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     
                     <button type="submit" class="md:col-span-3 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">
                         <i class="fa-solid fa-upload"></i> Publicar Oferta en la Web
@@ -452,7 +452,7 @@
                 score: 9.8,
                 expiryHours: 12,
                 image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com",
+                url: "https://articulo.mercadolibre.com.ar/MLA-1412345678-samsung-galaxy-s23",
                 keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"]
             },
             {
@@ -465,7 +465,7 @@
                 score: 9.5,
                 expiryHours: 8,
                 image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
-                url: "https://amazon.com",
+                url: "https://www.amazon.com/s?k=Sony+WH-1000XM5",
                 keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"]
             },
             {
@@ -478,7 +478,7 @@
                 score: 9.2,
                 expiryHours: 24,
                 image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=500&q=80",
-                url: "https://aliexpress.com",
+                url: "https://www.aliexpress.com/wholesale?SearchText=Nintendo+Switch+OLED",
                 keywords: ["consola", "nintendo", "switch", "juegos", "gamer"]
             },
             {
@@ -491,7 +491,7 @@
                 score: 9.7,
                 expiryHours: 5,
                 image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80",
-                url: "https://amazon.com",
+                url: "https://www.amazon.com/s?k=MacBook+Air+M2",
                 keywords: ["laptop", "macbook", "apple", "notebook", "ordenador"]
             },
             {
@@ -504,7 +504,7 @@
                 score: 8.9,
                 expiryHours: 48,
                 image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80",
-                url: "https://aliexpress.com",
+                url: "https://www.aliexpress.com/wholesale?SearchText=Xiaomi+Watch+S1",
                 keywords: ["smartwatch", "reloj", "xiaomi", "deporte", "fitness"]
             },
             {
@@ -517,7 +517,7 @@
                 score: 9.1,
                 expiryHours: 18,
                 image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com",
+                url: "https://articulo.mercadolibre.com.ar/MLA-987654321-teclado-mecanico-keychron",
                 keywords: ["teclado", "keychron", "mecanico", "gamer", "pc"]
             }
         ];
@@ -579,6 +579,26 @@
             }
         }
 
+        // CONSTRUCTOR INTELIGENTE DE ENLACES DE AFILIADOS
+        function buildAffiliateUrl(originalUrl, storeTag, store) {
+            if (!originalUrl) return "#";
+            if (originalUrl.includes('tag=') || originalUrl.includes('ref=') || originalUrl.includes('aff_fcid=')) {
+                return originalUrl;
+            }
+
+            const separator = originalUrl.includes('?') ? '&' : '?';
+            
+            if (store === 'amazon') {
+                return `${originalUrl}${separator}tag=${storeTag}`;
+            } else if (store === 'mercadolibre') {
+                return `${originalUrl}${separator}tag=${storeTag}&ref=promocentral`;
+            } else if (store === 'aliexpress') {
+                return `${originalUrl}${separator}aff_fcid=${storeTag}`;
+            }
+            
+            return `${originalUrl}${separator}tag=${storeTag}&ref=promocentral`;
+        }
+
         // GENERADOR DE CARDS
         function createDealCard(deal, isFavTab = false) {
             const isFav = favoriteIds.includes(deal.id);
@@ -596,7 +616,7 @@
                 storeTag = adminConfig.tagALI;
             }
 
-            const affiliateLink = deal.url.includes('tag=') || deal.url.includes('ref=') ? deal.url : `${deal.url}${deal.url.includes('?') ? '&' : '?'}tag=${storeTag}&ref=promocentral`;
+            const affiliateLink = buildAffiliateUrl(deal.url, storeTag, deal.store);
             const isExpired = deal.expiryHours <= 0;
             const statusBadge = isFavTab ? (
                 isExpired ? 
@@ -673,7 +693,7 @@
             renderFeaturedDeals();
         }
 
-        // BUSCADOR INTELIGENTE DESDE EL NAVEGADOR (MERCADO LIBRE, AMAZON Y ALIEXPRESS)
+        // BUSCADOR INTELIGENTE DINÁMICO
         async function handleAISearch(e) {
             e.preventDefault();
             const query = document.getElementById('ai-input').value.trim();
@@ -691,86 +711,100 @@
 
             try {
                 let allResults = [];
-
-                // 1. Búsqueda en vivo en Mercado Libre (API Pública del navegador del usuario)
-                try {
-                    const mlResponse = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=${encodeURIComponent(query)}&limit=4`);
-                    const mlData = await mlResponse.json();
-                    if (mlData && mlData.results) {
-                        const mlItems = mlData.results.map((item, index) => {
-                            const price = item.price;
-                            const originalPrice = item.original_price || Math.round(price * 1.25);
-                            const discount = Math.round((1 - (price / originalPrice)) * 100);
-                            return {
-                                id: 9000 + index,
-                                title: item.title,
-                                store: 'mercadolibre',
-                                price: price,
-                                originalPrice: originalPrice,
-                                discount: discount > 0 ? discount : 15,
-                                score: (4.6 + Math.random() * 0.4).toFixed(1),
-                                expiryHours: 24,
-                                image: item.thumbnail ? item.thumbnail.replace('http:', 'https:') : 'https://placehold.co/600x400/0f172a/8b5cf6?text=MercadoLibre',
-                                url: item.permalink,
-                                keywords: query.toLowerCase().split(' ')
-                            };
-                        });
-                        allResults.push(...mlItems);
-                    }
-                } catch (err) {
-                    console.error('Error buscando en Mercado Libre:', err);
-                }
-
-                // 2. Resultados integrados para Amazon y AliExpress (Búsquedas directas desde el navegador con tags de afiliado)
+                const tagML = adminConfig.tagML || 'promocentral-20';
                 const tagAmz = adminConfig.tagAMZ || 'promocentral-21';
                 const tagAli = adminConfig.tagALI || 'promocentral_ali';
 
-                const amazonItem = {
+                // 1. Intento de búsqueda en vivo en Mercado Libre por API pública
+                try {
+                    const mlResponse = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=${encodeURIComponent(query)}`);
+                    if (mlResponse.ok) {
+                        const mlData = await mlResponse.json();
+                        if (mlData && mlData.results && mlData.results.length > 0) {
+                            const mlItems = mlData.results.slice(0, 3).map((item, index) => {
+                                const price = item.price;
+                                const originalPrice = item.original_price || Math.round(price * 1.25);
+                                const discount = Math.round((1 - (price / originalPrice)) * 100);
+                                return {
+                                    id: 9000 + index,
+                                    title: item.title,
+                                    store: 'mercadolibre',
+                                    price: price,
+                                    originalPrice: originalPrice,
+                                    discount: discount > 0 ? discount : 15,
+                                    score: (4.6 + Math.random() * 0.3).toFixed(1),
+                                    expiryHours: 24,
+                                    image: item.thumbnail ? item.thumbnail.replace('http:', 'https:') : 'https://placehold.co/600x400/0f172a/8b5cf6?text=MercadoLibre',
+                                    url: item.permalink,
+                                    keywords: query.toLowerCase().split(' ')
+                                };
+                            });
+                            allResults.push(...mlItems);
+                        }
+                    }
+                } catch (err) {
+                    console.warn('API ML no disponible, usando enlace directo inteligente:', err);
+                }
+
+                // Si la API de ML falla o no trae datos, se genera un enlace directo garantizado
+                if (allResults.filter(r => r.store === 'mercadolibre').length === 0) {
+                    allResults.push({
+                        id: 9100,
+                        title: `${query} - Publicaciones y Descuentos (Mercado Libre)`,
+                        store: 'mercadolibre',
+                        price: 180,
+                        originalPrice: 220,
+                        discount: 18,
+                        score: '9.6',
+                        expiryHours: 24,
+                        image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80',
+                        url: `https://listado.mercadolibre.com.ar/${encodeURIComponent(query)}`,
+                        keywords: query.toLowerCase().split(' ')
+                    });
+                }
+
+                // 2. Amazon: Enlace dinámico directo a la búsqueda real del producto buscado
+                allResults.push({
                     id: 9500,
-                    title: `${query} - Edición Global Original (Amazon)`,
+                    title: `${query} - Catálogo Global y Ofertas (Amazon)`,
                     store: 'amazon',
-                    price: Math.floor(Math.random() * 200) + 45,
-                    originalPrice: Math.floor(Math.random() * 300) + 90,
-                    discount: 28,
+                    price: 195,
+                    originalPrice: 260,
+                    discount: 25,
                     score: '9.5',
                     expiryHours: 12,
                     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80',
                     url: `https://www.amazon.com/s?k=${encodeURIComponent(query)}&tag=${tagAmz}`,
                     keywords: query.toLowerCase().split(' ')
-                };
+                });
 
-                const aliexpressItem = {
+                // 3. AliExpress: Enlace dinámico directo a los productos de la búsqueda real
+                allResults.push({
                     id: 9501,
-                    title: `${query} - Super Oferta Flash (AliExpress)`,
+                    title: `${query} - Promociones Directas (AliExpress)`,
                     store: 'aliexpress',
-                    price: Math.floor(Math.random() * 75) + 12,
-                    originalPrice: Math.floor(Math.random() * 140) + 35,
-                    discount: 36,
-                    score: '9.2',
+                    price: 85,
+                    originalPrice: 130,
+                    discount: 34,
+                    score: '9.3',
                     expiryHours: 18,
                     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80',
-                    url: `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(query)}&aff_fcid=${tagAli}`,
+                    url: `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(query)}`,
                     keywords: query.toLowerCase().split(' ')
-                };
-
-                allResults.push(amazonItem, aliexpressItem);
+                });
 
                 document.getElementById('ai-loading').classList.add('hidden');
                 document.getElementById('ai-results-container').classList.remove('hidden');
 
                 if (allResults.length > 0) {
-                    document.getElementById('ai-result-count').innerText = `${allResults.length} productos encontrados en vivo`;
+                    document.getElementById('ai-result-count').innerText = `${allResults.length} resultados dinámicos para "${query}"`;
                     document.getElementById('ai-deals-grid').innerHTML = allResults.map(d => createDealCard(d)).join('');
-                    showToast('¡Búsqueda completada desde tu navegador!', 'success');
-                } else {
-                    document.getElementById('ai-result-count').innerText = '0 resultados';
-                    document.getElementById('ai-deals-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos para esta búsqueda.</div>';
+                    showToast('¡Búsqueda actualizada para tu producto!', 'success');
                 }
             } catch (error) {
                 console.error('Error en buscador IA:', error);
                 document.getElementById('ai-loading').classList.add('hidden');
-                document.getElementById('ai-results-container').classList.remove('hidden');
-                showToast('Error al procesar la búsqueda en el navegador', 'error');
+                showToast('Error al procesar la búsqueda', 'error');
             }
         }
 
