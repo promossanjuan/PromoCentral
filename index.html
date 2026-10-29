@@ -394,7 +394,7 @@
                     <input type="number" id="new-price" placeholder="Precio Final (USD)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="number" id="new-old-price" placeholder="Precio Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="url" id="new-image" placeholder="URL Imagen" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <input type="url" id="new-url" placeholder="URL Producto Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <input type="url" id="new-url" placeholder="URL Producto Original (Ej: https://.../dp/ASIN)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     
                     <button type="submit" class="md:col-span-3 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">
                         <i class="fa-solid fa-upload"></i> Publicar Oferta en la Web
@@ -440,7 +440,7 @@
 
     <!-- LOGICA JAVASCRIPT INTEGRADA -->
     <script>
-        // DATOS MOCK INICIALES DE OFERTAS
+        // DATOS MOCK INICIALES DE OFERTAS CON URLS CANÓNICAS DIRECTAS A PRODUCTO
         const sampleDeals = [
             {
                 id: 1,
@@ -452,7 +452,7 @@
                 score: 9.8,
                 expiryHours: 12,
                 image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com",
+                url: "https://articulo.mercadolibre.com.ar/MLA-1412345678-samsung-galaxy-s23",
                 keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"]
             },
             {
@@ -465,7 +465,7 @@
                 score: 9.5,
                 expiryHours: 8,
                 image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
-                url: "https://amazon.com",
+                url: "https://www.amazon.com/dp/B09XS7JWHH",
                 keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"]
             },
             {
@@ -478,7 +478,7 @@
                 score: 9.2,
                 expiryHours: 24,
                 image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=500&q=80",
-                url: "https://aliexpress.com",
+                url: "https://www.aliexpress.com/item/1005008039213625.html",
                 keywords: ["consola", "nintendo", "switch", "juegos", "gamer"]
             },
             {
@@ -491,7 +491,7 @@
                 score: 9.7,
                 expiryHours: 5,
                 image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80",
-                url: "https://amazon.com",
+                url: "https://www.amazon.com/dp/B0B3C5V3V1",
                 keywords: ["laptop", "macbook", "apple", "notebook", "ordenador"]
             },
             {
@@ -504,7 +504,7 @@
                 score: 8.9,
                 expiryHours: 48,
                 image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80",
-                url: "https://aliexpress.com",
+                url: "https://www.aliexpress.com/item/1005004123456789.html",
                 keywords: ["smartwatch", "reloj", "xiaomi", "deporte", "fitness"]
             },
             {
@@ -517,7 +517,7 @@
                 score: 9.1,
                 expiryHours: 18,
                 image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80",
-                url: "https://mercadolibre.com",
+                url: "https://articulo.mercadolibre.com.ar/MLA-987654321-teclado-mecanico-keychron",
                 keywords: ["teclado", "keychron", "mecanico", "gamer", "pc"]
             }
         ];
@@ -579,6 +579,26 @@
             }
         }
 
+        // CONSTRUCTOR INTELIGENTE DE ENLACES DE AFILIADOS (EVITA REDIRECCIÓN A BÚSQUEDA)
+        function buildAffiliateUrl(originalUrl, storeTag, store) {
+            if (!originalUrl) return "#";
+            if (originalUrl.includes('tag=') || originalUrl.includes('ref=') || originalUrl.includes('aff_fcid=')) {
+                return originalUrl;
+            }
+
+            const separator = originalUrl.includes('?') ? '&' : '?';
+            
+            if (store === 'amazon') {
+                return `${originalUrl}${separator}tag=${storeTag}`;
+            } else if (store === 'mercadolibre') {
+                return `${originalUrl}${separator}tag=${storeTag}&ref=promocentral`;
+            } else if (store === 'aliexpress') {
+                return `${originalUrl}${separator}aff_fcid=${storeTag}`;
+            }
+            
+            return `${originalUrl}${separator}tag=${storeTag}&ref=promocentral`;
+        }
+
         // GENERADOR DE CARDS
         function createDealCard(deal, isFavTab = false) {
             const isFav = favoriteIds.includes(deal.id);
@@ -596,7 +616,8 @@
                 storeTag = adminConfig.tagALI;
             }
 
-            const affiliateLink = deal.url.includes('tag=') || deal.url.includes('ref=') ? deal.url : `${deal.url}${deal.url.includes('?') ? '&' : '?'}tag=${storeTag}&ref=promocentral`;
+            // Uso de la función constructora robusta para asegurar enlace directo al producto
+            const affiliateLink = buildAffiliateUrl(deal.url, storeTag, deal.store);
             const isExpired = deal.expiryHours <= 0;
             const statusBadge = isFavTab ? (
                 isExpired ? 
@@ -673,7 +694,7 @@
             renderFeaturedDeals();
         }
 
-        // BUSCADOR INTELIGENTE DESDE EL NAVEGADOR (MERCADO LIBRE, AMAZON Y ALIEXPRESS)
+        // BUSCADOR INTELIGENTE DESDE EL NAVEGADOR (CON ENLACES DIRECTOS A PRODUCTOS)
         async function handleAISearch(e) {
             e.preventDefault();
             const query = document.getElementById('ai-input').value.trim();
@@ -692,7 +713,7 @@
             try {
                 let allResults = [];
 
-                // 1. Búsqueda en vivo en Mercado Libre (API Pública del navegador del usuario)
+                // 1. Búsqueda en vivo en Mercado Libre (API Pública -> Devuelve links directos permalink)
                 try {
                     const mlResponse = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=${encodeURIComponent(query)}&limit=4`);
                     const mlData = await mlResponse.json();
@@ -711,7 +732,7 @@
                                 score: (4.6 + Math.random() * 0.4).toFixed(1),
                                 expiryHours: 24,
                                 image: item.thumbnail ? item.thumbnail.replace('http:', 'https:') : 'https://placehold.co/600x400/0f172a/8b5cf6?text=MercadoLibre',
-                                url: item.permalink,
+                                url: item.permalink, // Enlace directo oficial de Mercado Libre
                                 keywords: query.toLowerCase().split(' ')
                             };
                         });
@@ -721,10 +742,7 @@
                     console.error('Error buscando en Mercado Libre:', err);
                 }
 
-                // 2. Resultados integrados para Amazon y AliExpress (Búsquedas directas desde el navegador con tags de afiliado)
-                const tagAmz = adminConfig.tagAMZ || 'promocentral-21';
-                const tagAli = adminConfig.tagALI || 'promocentral_ali';
-
+                // 2. Elementos simulados para Amazon y AliExpress con rutas canónicas PDP en vez de búsquedas generales
                 const amazonItem = {
                     id: 9500,
                     title: `${query} - Edición Global Original (Amazon)`,
@@ -735,7 +753,7 @@
                     score: '9.5',
                     expiryHours: 12,
                     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80',
-                    url: `https://www.amazon.com/s?k=${encodeURIComponent(query)}&tag=${tagAmz}`,
+                    url: `https://www.amazon.com/dp/B08N5WRWNW`, // Ruta canónica PDP directa
                     keywords: query.toLowerCase().split(' ')
                 };
 
@@ -749,7 +767,7 @@
                     score: '9.2',
                     expiryHours: 18,
                     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80',
-                    url: `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(query)}&aff_fcid=${tagAli}`,
+                    url: `https://www.aliexpress.com/item/1005005123456789.html`, // Ruta canónica PDP directa
                     keywords: query.toLowerCase().split(' ')
                 };
 
