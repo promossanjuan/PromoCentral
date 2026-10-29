@@ -148,7 +148,7 @@
                             <i class="fa-solid fa-check text-emerald-400"></i> Links Directos Verificados
                         </span>
                         <span class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/50">
-                            <i class="fa-solid fa-sync text-purple-400"></i> Actualización en Vivo
+                            <i class="fa-solid fa-sync text-purple-400"></i> Actualización cada 15 min
                         </span>
                     </div>
                 </div>
@@ -183,11 +183,11 @@
             <div class="bg-carbon-card border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
                 <div class="max-w-3xl mx-auto text-center space-y-4">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30">
-                        <i class="fa-solid fa-brain"></i> Motor IA Directo en el Navegador
+                        <i class="fa-solid fa-brain"></i> Motor Supabase Edge Function AI (Proxy Seguro)
                     </div>
                     <h2 class="text-2xl sm:text-4xl font-extrabold text-white">¿Qué estás buscando exactamente?</h2>
                     <p class="text-slate-400 text-sm">
-                        Escribe lo que buscas. Consultaremos en vivo productos reales en Mercado Libre, Amazon y AliExpress desde tu navegador.
+                        Escribe lo que buscas. Consultaremos las ofertas de manera segura a través del backend de Supabase evitando bloqueos CORS.
                     </p>
 
                     <!-- BUSCADOR INPUT -->
@@ -216,14 +216,14 @@
                 <div class="inline-block p-4 bg-purple-500/10 rounded-full border border-purple-500/30 animate-pulse">
                     <i class="fa-solid fa-robot text-4xl text-purple-400 animate-spin"></i>
                 </div>
-                <p class="text-purple-300 font-medium text-sm">Buscando ofertas reales en vivo en Mercado Libre, Amazon y AliExpress desde tu navegador...</p>
+                <p class="text-purple-300 font-medium text-sm">Consultando de forma segura mediante Supabase Edge Function...</p>
             </div>
 
             <!-- RESULTADOS DE BÚSQUEDA IA -->
             <div id="ai-results-container" class="hidden space-y-4">
                 <div class="flex justify-between items-center px-1">
                     <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sparkles text-purple-400"></i> Resultados Encontrados en Vivo
+                        <i class="fa-solid fa-sparkles text-purple-400"></i> Resultados Encontrados
                     </h3>
                     <span id="ai-result-count" class="text-xs text-slate-400"></span>
                 </div>
@@ -289,14 +289,14 @@
             </div>
         </section>
 
-        <!-- ================= PANEL DE ADMINISTRADOR (MODAL / PANTALLA) ================= -->
+        <!-- ================= PANEL DE ADMINISTRADOR ================= -->
         <section id="tab-admin" class="tab-content hidden space-y-8">
             <div class="flex justify-between items-center bg-carbon-card p-6 rounded-2xl border border-slate-800">
                 <div>
                     <h2 class="text-2xl font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-user-gear text-purple-400"></i> Panel de Control de Afiliado
                     </h2>
-                    <p class="text-xs text-slate-400">Gestiona tus Tags de Afiliado, claves de API oficiales y analíticas de clics.</p>
+                    <p class="text-xs text-slate-400">Gestiona tus configuraciones de Supabase, Tags de Afiliado y analíticas de clics.</p>
                 </div>
                 <button onclick="logoutAdmin()" class="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2">
                     <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
@@ -349,70 +349,44 @@
                 </div>
             </div>
 
-            <!-- CONFIGURACIÓN DE TAGS Y APIS OFICIALES -->
+            <!-- CONFIGURACIÓN API SUPABASE Y TAGS -->
             <div class="bg-carbon-card p-6 rounded-2xl border border-slate-800 space-y-6">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-key text-purple-400"></i> Configuración de Tags & APIs de Afiliados
+                    <i class="fa-solid fa-sliders text-purple-400"></i> Configuración de Integración & Tags
                 </h3>
                 
-                <form onsubmit="saveAdminSettings(event)" class="space-y-6">
-                    <!-- TAGS DE AFILIADOS -->
+                <form onsubmit="saveAdminSettings(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Supabase URL</label>
+                            <input type="text" id="cfg-supabase-url" placeholder="https://tu-proyecto.supabase.co" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Supabase API Key (Anon / Public)</label>
+                            <input type="password" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1Ni..." class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-800 my-4">
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-store text-yellow-400"></i> Tag Afiliado Mercado Libre</label>
                             <input type="text" id="cfg-tag-ml" placeholder="ml_afiliado_tag" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-brands fa-amazon text-amber-400"></i> Tag Afiliado Amazon (Associate Tag)</label>
-                            <input type="text" id="cfg-tag-amz" placeholder="tu-tag-20" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-brands fa-amazon text-amber-400"></i> Tag Afiliado Amazon</label>
+                            <input type="text" id="cfg-tag-amz" placeholder="amazon_tag-20" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-bag-shopping text-rose-400"></i> Tag Afiliado AliExpress (Tracking ID)</label>
-                            <input type="text" id="cfg-tag-ali" placeholder="ali_tracking_id" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-800">
-
-                    <!-- AMAZON PA-API -->
-                    <div class="space-y-3">
-                        <h4 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-                            <i class="fa-brands fa-amazon"></i> Amazon Product Advertising API (PA-API v5)
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1">Amazon Access Key</label>
-                                <input type="password" id="cfg-amz-access-key" placeholder="AKIAIOSFODNN7EXAMPLE" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1">Amazon Secret Key</label>
-                                <input type="password" id="cfg-amz-secret-key" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-800">
-
-                    <!-- ALIEXPRESS PORTALS API -->
-                    <div class="space-y-3">
-                        <h4 class="text-sm font-bold text-rose-400 flex items-center gap-2">
-                            <i class="fa-solid fa-bag-shopping"></i> AliExpress Portals API (Open Platform)
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1">AliExpress App Key</label>
-                                <input type="password" id="cfg-ali-app-key" placeholder="50000000" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1">AliExpress App Secret</label>
-                                <input type="password" id="cfg-ali-app-secret" placeholder="abcdef0123456789abcdef0123456789" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                            </div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1"><i class="fa-solid fa-bag-shopping text-rose-400"></i> Tag Afiliado AliExpress</label>
+                            <input type="text" id="cfg-tag-ali" placeholder="ali_affiliate_id" class="w-full px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                     </div>
 
                     <div class="flex justify-end pt-2">
                         <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-floppy-disk"></i> Guardar Credenciales y Tags
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
                         </button>
                     </div>
                 </form>
@@ -433,7 +407,7 @@
                     <input type="number" id="new-price" placeholder="Precio Final (USD)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="number" id="new-old-price" placeholder="Precio Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     <input type="url" id="new-image" placeholder="URL Imagen" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
-                    <input type="url" id="new-url" placeholder="URL Producto Original (Ej: https://.../dp/ASIN)" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
+                    <input type="url" id="new-url" placeholder="URL Producto Original" required class="px-4 py-2.5 rounded-xl bg-carbon-light border border-slate-700 text-xs text-white focus:outline-none focus:border-purple-500">
                     
                     <button type="submit" class="md:col-span-3 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">
                         <i class="fa-solid fa-upload"></i> Publicar Oferta en la Web
@@ -491,7 +465,7 @@
                 score: 9.8,
                 expiryHours: 12,
                 image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=500&q=80",
-                url: "https://articulo.mercadolibre.com.ar/MLA-1412345678-samsung-galaxy-s23",
+                url: "https://mercadolibre.com",
                 keywords: ["smartphone", "samsung", "celular", "galaxy", "camara"]
             },
             {
@@ -504,7 +478,7 @@
                 score: 9.5,
                 expiryHours: 8,
                 image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
-                url: "https://www.amazon.com/dp/B09XS7JWHH",
+                url: "https://amazon.com",
                 keywords: ["auriculares", "sony", "musica", "anc", "audio", "cascos"]
             },
             {
@@ -517,7 +491,7 @@
                 score: 9.2,
                 expiryHours: 24,
                 image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&w=500&q=80",
-                url: "https://www.aliexpress.com/item/1005008039213625.html",
+                url: "https://aliexpress.com",
                 keywords: ["consola", "nintendo", "switch", "juegos", "gamer"]
             },
             {
@@ -530,7 +504,7 @@
                 score: 9.7,
                 expiryHours: 5,
                 image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80",
-                url: "https://www.amazon.com/dp/B0B3C5V3V1",
+                url: "https://amazon.com",
                 keywords: ["laptop", "macbook", "apple", "notebook", "ordenador"]
             },
             {
@@ -543,7 +517,7 @@
                 score: 8.9,
                 expiryHours: 48,
                 image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80",
-                url: "https://www.aliexpress.com/item/1005004123456789.html",
+                url: "https://aliexpress.com",
                 keywords: ["smartwatch", "reloj", "xiaomi", "deporte", "fitness"]
             },
             {
@@ -556,7 +530,7 @@
                 score: 9.1,
                 expiryHours: 18,
                 image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80",
-                url: "https://articulo.mercadolibre.com.ar/MLA-987654321-teclado-mecanico-keychron",
+                url: "https://mercadolibre.com",
                 keywords: ["teclado", "keychron", "mecanico", "gamer", "pc"]
             }
         ];
@@ -566,13 +540,11 @@
         let favoriteIds = JSON.parse(localStorage.getItem('promo_favs')) || [1, 2];
         let recentSearches = JSON.parse(localStorage.getItem('promo_searches')) || ["Notebook Gamer", "Auriculares Inalámbricos", "Samsung S23"];
         let adminConfig = JSON.parse(localStorage.getItem('promo_admin_cfg')) || {
+            supabaseUrl: '',
+            supabaseKey: '',
             tagML: 'promocentral-20',
             tagAMZ: 'promocentral-21',
-            tagALI: 'promocentral_ali',
-            amzAccessKey: '',
-            amzSecretKey: '',
-            aliAppKey: '',
-            aliAppSecret: ''
+            tagALI: 'promocentral_ali'
         };
 
         let currentFilterStore = 'all';
@@ -622,26 +594,6 @@
             }
         }
 
-        // CONSTRUCTOR INTELIGENTE DE ENLACES DE AFILIADOS
-        function buildAffiliateUrl(originalUrl, storeTag, store) {
-            if (!originalUrl) return "#";
-            if (originalUrl.includes('tag=') || originalUrl.includes('ref=') || originalUrl.includes('aff_fcid=')) {
-                return originalUrl;
-            }
-
-            const separator = originalUrl.includes('?') ? '&' : '?';
-            
-            if (store === 'amazon') {
-                return `${originalUrl}${separator}tag=${storeTag}`;
-            } else if (store === 'mercadolibre') {
-                return `${originalUrl}${separator}tag=${storeTag}&ref=promocentral`;
-            } else if (store === 'aliexpress') {
-                return `${originalUrl}${separator}aff_fcid=${storeTag}`;
-            }
-            
-            return `${originalUrl}${separator}tag=${storeTag}&ref=promocentral`;
-        }
-
         // GENERADOR DE CARDS
         function createDealCard(deal, isFavTab = false) {
             const isFav = favoriteIds.includes(deal.id);
@@ -659,7 +611,7 @@
                 storeTag = adminConfig.tagALI;
             }
 
-            const affiliateLink = buildAffiliateUrl(deal.url, storeTag, deal.store);
+            const affiliateLink = deal.url.includes('matt_tool') ? deal.url : `${deal.url}?tag=${storeTag}&ref=promocentral`;
             const isExpired = deal.expiryHours <= 0;
             const statusBadge = isFavTab ? (
                 isExpired ? 
@@ -736,7 +688,7 @@
             renderFeaturedDeals();
         }
 
-        // BUSCADOR INTELIGENTE EN VIVO CON SOPORTE PARA APIS OFICIALES DE AFILIADOS
+        // BUSCADOR INTELIGENTE CON SUPABASE EDGE FUNCTION (PROXY SEGURO)
         async function handleAISearch(e) {
             e.preventDefault();
             const query = document.getElementById('ai-input').value.trim();
@@ -752,85 +704,68 @@
                 renderRecentSearches();
             }
 
-            try {
-                let allResults = [];
-                const cleanQuery = encodeURIComponent(query.toLowerCase());
+            const sbUrl = adminConfig.supabaseUrl || localStorage.getItem('promo_sb_url');
+            const sbKey = adminConfig.supabaseKey || '';
+            const tagML = adminConfig.tagML || 'TU_TAG';
 
-                // 1. MERCADO LIBRE: Consulta sanitizada a API pública (Previene error 400)
-                try {
-                    const mlResponse = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=${cleanQuery}&limit=4`);
-                    if (mlResponse.ok) {
-                        const mlData = await mlResponse.json();
-                        if (mlData && mlData.results && mlData.results.length > 0) {
-                            const mlItems = mlData.results.map((item, index) => {
-                                const price = Math.round(item.price);
-                                const originalPrice = item.original_price ? Math.round(item.original_price) : Math.round(price * 1.25);
-                                const discount = Math.round((1 - (price / originalPrice)) * 100);
-                                return {
-                                    id: 9000 + index,
-                                    title: item.title,
-                                    store: 'mercadolibre',
-                                    price: price,
-                                    originalPrice: originalPrice,
-                                    discount: discount > 0 ? discount : 15,
-                                    score: (4.6 + Math.random() * 0.3).toFixed(1),
-                                    expiryHours: 24,
-                                    image: item.thumbnail ? item.thumbnail.replace('http:', 'https:').replace('-I.jpg', '-O.jpg') : 'https://placehold.co/600x400/0f172a/8b5cf6?text=MercadoLibre',
-                                    url: item.permalink, // Link directo oficial
-                                    keywords: query.toLowerCase().split(' ')
-                                };
-                            });
-                            allResults.push(...mlItems);
-                        }
-                    }
-                } catch (err) {
-                    console.warn('Fallback Mercado Libre activo:', err);
+            if (!sbUrl) {
+                document.getElementById('ai-loading').classList.add('hidden');
+                showToast('Configura tu Supabase URL en el Panel de Admin', 'error');
+                openAdminModal();
+                return;
+            }
+
+            try {
+                // Preparamos los headers de forma segura para Supabase Edge Functions
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (sbKey) {
+                    headers['Authorization'] = `Bearer ${sbKey}`;
+                    headers['apikey'] = sbKey;
                 }
 
-                // 2. AMAZON: Conexión con PA-API o Enlace Directo Optimizado
-                const tagAmz = adminConfig.tagAMZ || 'promocentral-21';
-                allResults.push({
-                    id: 9500,
-                    title: `${query} - Oferta Destacada (Amazon)`,
-                    store: 'amazon',
-                    price: 199,
-                    originalPrice: 260,
-                    discount: 23,
-                    score: '9.6',
-                    expiryHours: 12,
-                    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80',
-                    url: `https://www.amazon.com/s?k=${cleanQuery}&tag=${tagAmz}`,
-                    keywords: query.toLowerCase().split(' ')
+                const response = await fetch(`${sbUrl}/functions/v1/buscadorofertas`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        busqueda: query,
+                        tienda: 'Mercado Libre',
+                        tagAfiliado: tagML
+                    })
                 });
 
-                // 3. ALIEXPRESS: Conexión con Portals API o Enlace Directo Optimizado
-                const tagAli = adminConfig.tagALI || 'promocentral_ali';
-                allResults.push({
-                    id: 9501,
-                    title: `${query} - Super Oferta Flash (AliExpress)`,
-                    store: 'aliexpress',
-                    price: 89,
-                    originalPrice: 135,
-                    discount: 34,
-                    score: '9.3',
-                    expiryHours: 18,
-                    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80',
-                    url: `https://www.aliexpress.com/wholesale?SearchText=${cleanQuery}&aff_fcid=${tagAli}`,
-                    keywords: query.toLowerCase().split(' ')
-                });
-
+                const data = await response.json();
                 document.getElementById('ai-loading').classList.add('hidden');
                 document.getElementById('ai-results-container').classList.remove('hidden');
 
-                if (allResults.length > 0) {
-                    document.getElementById('ai-result-count').innerText = `${allResults.length} resultados dinámicos encontrados para "${query}"`;
-                    document.getElementById('ai-deals-grid').innerHTML = allResults.map(d => createDealCard(d)).join('');
-                    showToast('¡Búsqueda procesada en vivo desde tu navegador!', 'success');
+                if (data.success && data.ofertas && data.ofertas.length > 0) {
+                    const mappedDeals = data.ofertas.map((item, index) => ({
+                        id: 9000 + index,
+                        title: item.titulo,
+                        store: 'mercadolibre',
+                        price: item.precio_oferta,
+                        originalPrice: item.precio_original,
+                        discount: item.descuento,
+                        score: item.puntuacion || 4.8,
+                        expiryHours: 24,
+                        image: item.imagen_url,
+                        url: item.link_afiliado,
+                        keywords: query.toLowerCase().split(' ')
+                    }));
+
+                    document.getElementById('ai-result-count').innerText = `${mappedDeals.length} ofertas reales encontradas`;
+                    document.getElementById('ai-deals-grid').innerHTML = mappedDeals.map(d => createDealCard(d)).join('');
+                    showToast('¡Ofertas reales obtenidas de forma segura!', 'success');
+                } else {
+                    document.getElementById('ai-result-count').innerText = '0 resultados';
+                    document.getElementById('ai-deals-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">No se encontraron productos reales para esta búsqueda.</div>';
                 }
             } catch (error) {
-                console.error('Error en el buscador:', error);
+                console.error('Error Edge Function:', error);
                 document.getElementById('ai-loading').classList.add('hidden');
-                showToast('Ocurrió un error al procesar la búsqueda', 'error');
+                document.getElementById('ai-results-container').classList.remove('hidden');
+                showToast('Error al conectar con la Edge Function de Supabase', 'error');
             }
         }
 
@@ -926,28 +861,24 @@
 
         // CONFIGURACIONES DE ADMIN
         function loadAdminConfigFields() {
+            document.getElementById('cfg-supabase-url').value = adminConfig.supabaseUrl || '';
+            document.getElementById('cfg-supabase-key').value = adminConfig.supabaseKey || '';
             document.getElementById('cfg-tag-ml').value = adminConfig.tagML || '';
             document.getElementById('cfg-tag-amz').value = adminConfig.tagAMZ || '';
             document.getElementById('cfg-tag-ali').value = adminConfig.tagALI || '';
-            document.getElementById('cfg-amz-access-key').value = adminConfig.amzAccessKey || '';
-            document.getElementById('cfg-amz-secret-key').value = adminConfig.amzSecretKey || '';
-            document.getElementById('cfg-ali-app-key').value = adminConfig.aliAppKey || '';
-            document.getElementById('cfg-ali-app-secret').value = adminConfig.aliAppSecret || '';
         }
 
         function saveAdminSettings(e) {
             e.preventDefault();
+            adminConfig.supabaseUrl = document.getElementById('cfg-supabase-url').value.trim();
+            adminConfig.supabaseKey = document.getElementById('cfg-supabase-key').value.trim();
             adminConfig.tagML = document.getElementById('cfg-tag-ml').value.trim();
             adminConfig.tagAMZ = document.getElementById('cfg-tag-amz').value.trim();
             adminConfig.tagALI = document.getElementById('cfg-tag-ali').value.trim();
-            adminConfig.amzAccessKey = document.getElementById('cfg-amz-access-key').value.trim();
-            adminConfig.amzSecretKey = document.getElementById('cfg-amz-secret-key').value.trim();
-            adminConfig.aliAppKey = document.getElementById('cfg-ali-app-key').value.trim();
-            adminConfig.aliAppSecret = document.getElementById('cfg-ali-app-secret').value.trim();
 
             localStorage.setItem('promo_admin_cfg', JSON.stringify(adminConfig));
             renderFeaturedDeals();
-            showToast('Configuración y claves de API guardadas', 'success');
+            showToast('Configuraciones y Tags guardados correctamente', 'success');
         }
 
         function addNewDealManual(e) {
