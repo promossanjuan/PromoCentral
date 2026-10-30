@@ -104,9 +104,8 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
 
-        <!-- ================= PESTAÑA 1: OFERTAS DESTACADAS ================= -->
+        <!-- PESTAÑA 1: OFERTAS DESTACADAS -->
         <section id="tab-featured" class="tab-content space-y-8">
-            <!-- BANNER PRINCIPAL -->
             <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-carbon-card via-slate-900 to-purple-950 border border-slate-800 p-8 sm:p-10 shadow-2xl">
                 <div class="relative z-10 max-w-2xl">
                     <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-4">
@@ -132,18 +131,16 @@
             </div>
 
             <!-- GRILLA DE PRODUCTOS -->
-            <div id="featured-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Carga desde Supabase -->
-            </div>
+            <div id="featured-deals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
 
-        <!-- ================= PESTAÑA 2: BUSCADOR INTELIGENTE IA ================= -->
+        <!-- PESTAÑA 2: BUSCADOR INTELIGENTE IA -->
         <section id="tab-ai-search" class="tab-content hidden space-y-8">
             <div class="bg-carbon-card border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-4">
                 <h2 class="text-2xl sm:text-4xl font-extrabold text-white">¿Qué producto estás buscando?</h2>
                 <form onsubmit="handleAISearch(event)" class="mt-6 relative max-w-2xl mx-auto">
                     <div class="relative flex items-center">
-                        <input type="text" id="ai-input" placeholder="Ej: Notebook, Samsung, Auriculares..." class="w-full pl-5 pr-36 py-4 rounded-2xl bg-slate-900 border-2 border-purple-500/40 text-slate-100 text-sm focus:outline-none focus:border-purple-500">
+                        <input type="text" id="ai-input" placeholder="Ej: Notebook, Smart TV, Samsung..." class="w-full pl-5 pr-36 py-4 rounded-2xl bg-slate-900 border-2 border-purple-500/40 text-slate-100 text-sm focus:outline-none focus:border-purple-500">
                         <button type="submit" class="absolute right-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-sm">
                             Buscar
                         </button>
@@ -162,10 +159,25 @@
             </div>
         </section>
 
-        <!-- ================= PESTAÑA 3: FAVORITOS ================= -->
+        <!-- PESTAÑA 3: FAVORITOS -->
         <section id="tab-favorites" class="tab-content hidden space-y-6">
             <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-bookmark text-purple-400"></i> Tus Favoritos</h2>
             <div id="favorites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        </section>
+
+        <!-- PESTAÑA 4: PANEL ADMIN -->
+        <section id="tab-admin" class="tab-content hidden space-y-8">
+            <div class="flex justify-between items-center bg-carbon-card p-6 rounded-2xl border border-slate-800">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-purple-400"></i> Panel de Control
+                    </h2>
+                    <p class="text-xs text-slate-400">Gestiona la base de datos de ofertas.</p>
+                </div>
+                <button onclick="logoutAdmin()" class="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold rounded-xl transition-all">
+                    Cerrar Sesión
+                </button>
+            </div>
         </section>
 
     </main>
@@ -175,24 +187,76 @@
         © 2026 PromoCentral - Sistema con Base de Datos Supabase Sincronizada
     </footer>
 
+    <!-- MODAL DE LOGIN ADMIN -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-carbon-card border border-purple-500/30 w-full max-w-md rounded-3xl p-8 shadow-2xl relative glow-purple">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-3 mb-6">
+                <div class="w-12 h-12 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Acceso Administrador</h3>
+                <p class="text-xs text-slate-400">Ingresa la contraseña para acceder al panel de control.</p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="admin-pass" placeholder="Contraseña (admin123)" class="w-full px-4 py-3 rounded-xl bg-carbon-light border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition-all">
+                    Ingresar al Panel
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- LÓGICA JAVASCRIPT & CONEXIÓN SUPABASE -->
     <script>
-        // CONFIGURACIÓN DE TU BASE DE DATOS SUPABASE
-        const SUPABASE_URL = 'https://pzqyhjelwuilcgzgxjbm.supabase.co'; // <--- PEGA TU URL DE SUPABASE
-        const SUPABASE_ANON_KEY = 'sb_publishable_3dKIcvtOMnFG3Neax3IXJg_APrEaCQW';      // <--- PEGA TU CLAVE ANON PÚBLICA
+        // REEMPLAZA CON TUS CLAVES REALES DE SUPABASE:
+        const SUPABASE_URL = 'https://pzqyhjelwuilcgzgxjbm.supabase.co';
+        const SUPABASE_ANON_KEY = 'TU_CLAVE_ANON_AQUI'; // <--- Pega aquí tu clave anon copiada de Supabase
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentFilterStore = 'all';
-        let favoriteIds = JSON.parse(localStorage.getItem('promo_favs')) || [];
 
         document.addEventListener('DOMContentLoaded', () => {
             renderFeaturedDeals();
         });
 
+        // CAMBIO DE PESTAÑAS
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+        }
+
+        // FUNCIONES MODAL ADMINISTRADOR
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === 'admin123' || pass === 'admin') {
+                closeAdminModal();
+                switchTab('admin');
+                showToast('Sesión iniciada como Administrador', 'success');
+            } else {
+                showToast('Contraseña incorrecta', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            switchTab('featured');
+            showToast('Sesión cerrada', 'info');
         }
 
         // CARGAR OFERTAS DESDE SUPABASE
@@ -231,7 +295,7 @@
             renderFeaturedDeals();
         }
 
-        // BUSCADOR EN SUPABASE (SIN BLOQUEOS NI CORROS)
+        // BUSCADOR EN SUPABASE
         async function handleAISearch(e) {
             e.preventDefault();
             const queryVal = document.getElementById('ai-input').value.trim();
@@ -292,6 +356,18 @@
                     </a>
                 </div>
             `;
+        }
+
+        // NOTIFICACIONES TOAST
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let colorClass = 'bg-slate-800 text-white';
+            if(type === 'success') colorClass = 'bg-emerald-900 text-emerald-200';
+            toast.className = `px-4 py-3 rounded-xl border border-slate-700 ${colorClass} text-xs font-semibold shadow-xl`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
